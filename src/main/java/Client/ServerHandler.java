@@ -1,7 +1,10 @@
-package Server;
+package Client;
 
+import Communication.End;
 import Communication.Information;
 import Communication.Message;
+import Communication.MessageType;
+import Connection.Handler;
 import Connection.IConnectionService;
 
 import java.util.Scanner;
@@ -21,7 +24,7 @@ public class ServerHandler extends Handler {
 
             Message a = (Message) connectionService.receiveObject();
 
-            if(a.getType().equals("INFORMATION") && a instanceof Information)
+            if(a.getType().equals(MessageType.INFORMATION) && a instanceof Information)
             {
                 Information b = (Information) a;
                 System.out.println("odebralem: " + b.getMessage());
@@ -32,7 +35,7 @@ public class ServerHandler extends Handler {
     @Override
     public void disconnect() {
         isEnd = true;
-        //moze jakies info wyslac???
+        connectionService.sendObject(new End());
         closeConnection();
     }
 }

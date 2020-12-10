@@ -2,7 +2,7 @@ package Server.ConsoleUI;
 
 import Server.Server;
 
-public class ServerConsoleUI extends ConsoleUI {
+public class ServerConsoleUI extends ConsoleUI implements Runnable {
 
     private final Server watchedServer;
     private final ServerSettingsUI settingsUI;
@@ -12,7 +12,8 @@ public class ServerConsoleUI extends ConsoleUI {
         settingsUI = new ServerSettingsUI(server, watchedServer.getGameParameters());
     }
 
-    public void loop() {
+    @Override
+    public void run() {
 
         while (true) {
             clear();
@@ -21,6 +22,8 @@ public class ServerConsoleUI extends ConsoleUI {
                     watchedServer.isRunning() ? "-" : "Start",
                     "Połączonych graczy: " + watchedServer.getOnlineClients() + "/" + watchedServer.getMaxClients(), "Podgląd", "Zakoncz"});
 
+            System.out.println("Aby odświeżyć informacje o serwerze kliknij cokolwiek i zatwierdz enterem.");
+
             int choose = getInt();
 
             switch (choose) {
@@ -28,7 +31,7 @@ public class ServerConsoleUI extends ConsoleUI {
                     settingsUI.loop();
                     break;
                 case 3:
-                    if(!watchedServer.changeState() || watchedServer.isRunning()) {
+                    if (watchedServer.isRunning() || !watchedServer.changeState()) {
                         System.out.println("Nie udało się zmienić stanu!");
                     }
                     break;
@@ -36,6 +39,10 @@ public class ServerConsoleUI extends ConsoleUI {
                     serverLog();
                     break;
                 case 6:
+                    if (watchedServer.isRunning()) {
+                        watchedServer.changeState();
+                    }
+                    watchedServer.setEnd(true);
                     return;
             }
         }
@@ -45,6 +52,7 @@ public class ServerConsoleUI extends ConsoleUI {
         System.out.print("ABY WYJŚĆ WPROWADŹ COKOLWIEK I KLIKNIJ ENTER!");
         watchedServer.setLogFlag(true);
         scanner.nextLine();
+        watchedServer.setLogFlag(false);
     }
 
 

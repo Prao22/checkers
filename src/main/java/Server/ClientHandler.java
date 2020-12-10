@@ -1,7 +1,8 @@
 package Server;
 
+import Communication.End;
 import Communication.Information;
-import Communication.Message;
+import Connection.Handler;
 import Connection.IConnectionService;
 
 import java.util.Scanner;
@@ -18,8 +19,7 @@ public class ClientHandler extends Handler {
     public void run() {
 
         Scanner scanner = new Scanner(System.in);
-
-        while (isEnd) {
+        while (!isEnd) {
             Information a = (Information) connectionService.receiveObject();
             System.out.println("odebralem: " + a);
         }
@@ -27,6 +27,7 @@ public class ClientHandler extends Handler {
 
     public void disconnect() {
         isEnd = true;
+        connectionService.sendObject(new End());
         closeConnection();
     }
 }

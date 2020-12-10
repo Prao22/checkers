@@ -1,4 +1,4 @@
-package Server;
+package Client;
 
 import Communication.Information;
 import Connection.ConnectionService;

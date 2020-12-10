@@ -1,4 +1,4 @@
-package Server;
+package Game;
 
 public class GameParameters {
     private int numberPlayers = 2;

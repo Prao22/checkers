@@ -4,20 +4,20 @@ import java.io.Serializable;
 
 public abstract class Message implements Serializable {
 
-    private String type;
+    private MessageType type;
 
-    public Message(String type) {
+    public Message(MessageType type) {
         this.type = type;
     }
 
-    public String getType() {
+    public MessageType getType() {
         return type;
     }
 
     @Override
     public String toString() {
         return "Message{" +
-                "type='" + type + '\'' +
+                "type='" + type.name() + '\'' +
                 '}';
     }
 }

@@ -1,48 +1,37 @@
 package Server;
 
+import Communication.Information;
 import Connection.ConnectionService;
+import Game.GameParameters;
 import Server.ConsoleUI.ServerConsoleUI;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.Arrays;
 
-//serwer tez jako singleton
-public class Server implements Runnable {
+public class Server {
 
-    private int port;
-    private int maxClients;
+    private int port = 59001;
+    private int maxClients = 2;
     private int onlineClients = 0;
     private ServerSocket serverSocket;
     private ClientHandler[] clients;
     private GameParameters gameParameters = new GameParameters();
     private boolean running = false;
+    private boolean end = false;
 
     public Server() {
-
+        Log.log("Konstruktor serwera");
     }
 
-    public Server(int port, int maxClients) throws IOException {
-
-        this.port = port;
-        serverSocket = new ServerSocket(port);
-
-        clients = new ClientHandler[maxClients];
-        this.maxClients = maxClients;
-
-    }
-
-    public static void main(String[] args) throws InterruptedException {
-
-
+    public static void main(String[] args) {
         Server server = new Server();
         ServerConsoleUI ui = new ServerConsoleUI(server);
 
-        Thread serverThread = new Thread(server);
-        serverThread.start();
-        ui.loop();
+        Thread uiThread = new Thread(ui);
+        uiThread.start();
 
-
+        server.run();
     }
 
     public void waitForPlayers() throws IOException {
@@ -51,13 +40,22 @@ public class Server implements Runnable {
             Thread thread = new Thread(clients[onlineClients]);
             thread.start();
             onlineClients++;
+            Log.log("Dołączył gracz.");
         }
+
+        Log.log("Wszyscy dołączyli.");
     }
 
-    @Override
     public void run() {
+        if (waitForStart() != 0) {
+            Log.err("Błąd podczas czekania - przerwanie");
+            return;
+        }
 
-        if (waitForStart() == -1) {
+        try {
+            waitForPlayers();
+        } catch (IOException exception) {
+            Log.err("Błąd podczas oczekiwanie na połączenie z graczami");
             return;
         }
 
@@ -68,6 +66,18 @@ public class Server implements Runnable {
 
         while (true) {
 
+            try {
+                Thread.sleep(3000);
+
+                for (int i = 0; i < 2; i++) {
+                    clients[i].sendMessage(new Information("hello" + i));
+                    Thread.sleep(200);
+                }
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
         }
 
         //return 0;
@@ -77,43 +87,60 @@ public class Server implements Runnable {
         while (!isRunning()) {
             try {
                 Thread.sleep(100);
+
+                if (isEnd()) {
+                    return -1;
+                }
             } catch (InterruptedException e) {
                 e.printStackTrace();
-                return -1;
+                return -2;
             }
         }
 
-        return 1;
+        return 0;
     }
 
     public boolean changeState() {
 
         if (isRunning()) {
-            for (ClientHandler c : clients) {
-                c.sendMessage(null);
-                c.disconnect();
-                c = null;
-            }
-
-            clients = null;
-
-            try {
-                serverSocket.close();
-                serverSocket = null;
-            } catch (IOException exception) {
-                return false;
-            }
+            return turnOff();
         } else {
-            try {
-                serverSocket = new ServerSocket(port);
-                clients = new ClientHandler[maxClients];
-            } catch (IOException exception) {
-                return false;
-            }
+            return turnOn();
+        }
+    }
+
+    public boolean turnOff() {
+        for (ClientHandler c : clients) {
+            c.sendMessage(null);
+            c.disconnect();
+            c = null;
         }
 
-        running = !running;
-        return true;
+        clients = null;
+
+        try {
+            serverSocket.close();
+            serverSocket = null;
+            running = false;
+            return true;
+        } catch (IOException exception) {
+            Log.err("Nie moge zamknąć serverSocket!");
+            return false;
+        }
+    }
+
+
+    public boolean turnOn() {
+        try {
+            serverSocket = new ServerSocket(port);
+            clients = new ClientHandler[maxClients];
+            running = true;
+            return true;
+
+        } catch (IOException exception) {
+            Log.err("Nie moge otworzyć serverSocket!");
+            return false;
+        }
     }
 
     public void setMaxClients(int maxClients) {
@@ -152,6 +179,14 @@ public class Server implements Runnable {
         return Log.logFlag;
     }
 
+    public boolean isEnd() {
+        return end;
+    }
+
+    public void setEnd(boolean end) {
+        this.end = end;
+    }
+
     @Override
     public String toString() {
         return "Server{" +
@@ -172,6 +207,10 @@ public class Server implements Runnable {
 
         public static void log(String log) {
             if (logFlag) System.out.println(log);
+        }
+
+        public static void err(String err) {
+            System.out.println("[error] " + err);
         }
     }
 }

@@ -1,5 +1,6 @@
 package Server.ConsoleUI;
 
+import Game.GameParameters;
 import Server.*;
 
 public class ServerSettingsUI extends ConsoleUI {
