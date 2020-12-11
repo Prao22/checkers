@@ -6,28 +6,41 @@ import Communication.Message;
 import Communication.MessageType;
 import Connection.Handler;
 import Connection.IConnectionService;
+import Server.Server;
 
-import java.util.Scanner;
+import java.util.Queue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.SynchronousQueue;
 
 public class ServerHandler extends Handler {
 
+    private final Queue<Message> receive;
 
     public ServerHandler(IConnectionService service) {
         super(service);
+        receive = new ConcurrentLinkedQueue<>();
     }
 
     @Override
     public void run() {
-        Scanner scanner = new Scanner(System.in);
 
-        while (true) {
+        while (!isEnd) {
+            try {
+                Message message = (Message) connectionService.receiveObject();
+                if (message == null) {
+                    System.out.println("Stracono połączenie z serwerem!");
+                    isEnd = true;
+                    closeConnection();
+                    return;
+                }
 
-            Message a = (Message) connectionService.receiveObject();
+                receive.add(message);
+                System.out.println("{CLIENT} Otrzymał wiadomość, dodano do kolejki");
 
-            if(a.getType().equals(MessageType.INFORMATION) && a instanceof Information)
-            {
-                Information b = (Information) a;
-                System.out.println("odebralem: " + b.getMessage());
+            } catch (ClassCastException exception) {
+                // nie wiadomo co zostalo wyslane
+                System.out.println("Otrzymałem nie zrozumiała wiadomość!");
             }
         }
     }

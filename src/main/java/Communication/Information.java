@@ -1,11 +1,11 @@
 package Communication;
 
-public class Information extends Message {
+public class Information extends CommunicationMessage {
 
     private final String information;
 
     public Information(String message) {
-        super(MessageType.INFORMATION);
+        super(CommunicationMessageType.INFORMATION);
         information = message;
     }
 

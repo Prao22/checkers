@@ -93,7 +93,6 @@ public class ServerSettingsUI extends ConsoleUI {
         int players = getInt();
 
         if (players > 1 && players < 7) {
-            watchedServer.setMaxClients(players);
             gameParameters.setNumberPlayers(players);
         }
     }

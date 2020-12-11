@@ -7,28 +7,8 @@ public class Field {
     protected Counter counter = null;
     protected Field[] neighbours = null;
 
-    public enum Type {
-        REAL, FAKE;
+    Field() {
+        neighbours = new Field[MAX_NEIGHBOURS];
     }
 
-    protected Type type;
-
-    Field(Type type) {
-        this.type = type;
-
-        if (type == Type.REAL) {
-            neighbours = new Field[MAX_NEIGHBOURS];
-        }
-    }
-
-    @Override
-    public String toString() {
-        return type == Type.REAL ? "*" : "-";
-//        return "Field{" +
-//                "MAX_NEIGHBOURS=" + MAX_NEIGHBOURS +
-//                ", counter=" + counter +
-//                ", neighbours=" + Arrays.toString(neighbours) +
-//                ", type=" + type +
-//                '}';
-    }
 }

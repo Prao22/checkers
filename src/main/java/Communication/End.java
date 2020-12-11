@@ -1,9 +1,9 @@
 package Communication;
 
-public class End extends Message {
+public class End extends CommunicationMessage {
 
     public End(){
-        super(MessageType.END);
+        super(CommunicationMessageType.END);
     }
 
     @Override

@@ -1,7 +1,7 @@
 package Game;
 
 public class GameParameters {
-    private int numberPlayers = 2;
+    private int numberPlayers = 1;
     private int numberFields = 4;
     private int numberCounter = 10;
     private boolean blocks = true;

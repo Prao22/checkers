@@ -6,15 +6,16 @@ public class ServerConsoleUI extends ConsoleUI implements Runnable {
 
     private final Server watchedServer;
     private final ServerSettingsUI settingsUI;
+    private final Object serverLock;
 
-    public ServerConsoleUI(Server server) {
+    public ServerConsoleUI(Server server, Object lock) {
         watchedServer = server;
         settingsUI = new ServerSettingsUI(server, watchedServer.getGameParameters());
+        serverLock = lock;
     }
 
     @Override
     public void run() {
-
         while (true) {
             clear();
             printInBorder("SERWER");
@@ -33,6 +34,10 @@ public class ServerConsoleUI extends ConsoleUI implements Runnable {
                 case 3:
                     if (watchedServer.isRunning() || !watchedServer.changeState()) {
                         System.out.println("Nie udało się zmienić stanu!");
+                    } else {
+                        synchronized (serverLock) {
+                            serverLock.notify();
+                        }
                     }
                     break;
                 case 5:
