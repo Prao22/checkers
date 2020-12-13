@@ -4,6 +4,7 @@ import Communication.*;
 import Connection.ConnectionService;
 import Game.GameParameters;
 import Server.ConsoleUI.ServerConsoleUI;
+import Utility.Log;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -16,7 +17,7 @@ public class Server implements Sender {
     private ServerSocket serverSocket;
     private Map<Integer, ClientHandler> clients;
     private final GameParameters gameParameters;
-    private final GameService gameService;
+    private GameService gameService;
     private boolean running = false;
     private boolean end = false;
     private final Object lock = new Object();
@@ -24,13 +25,12 @@ public class Server implements Sender {
     public Server() {
         Log.log("Konstruktor serwera");
         gameParameters = new GameParameters();
-        gameService = new GameManager(this, gameParameters);
     }
 
     public static void main(String[] args) {
         Server server = new Server();
+        server.setGameService(new GameManager(server, server.getGameParameters()));
         ServerConsoleUI ui = new ServerConsoleUI(server, server.getLock());
-
         Thread uiThread = new Thread(ui);
         uiThread.start();
 
@@ -39,8 +39,9 @@ public class Server implements Sender {
 
     public void waitForPlayers() throws IOException {
         while (onlineClients < gameParameters.getNumberPlayers()) {
-            clients.put(onlineClients, new ClientHandler(onlineClients + 1, new ConnectionService(serverSocket.accept()), lock));
-            clients.get(onlineClients).start();
+            clients.put(onlineClients + 1, new ClientHandler(onlineClients + 1,
+                    new ConnectionService(serverSocket.accept()), lock));
+            clients.get(onlineClients + 1).start();
             onlineClients++;
             Log.log("Dołączył gracz.");
         }
@@ -68,13 +69,7 @@ public class Server implements Sender {
 
         while (true) {
 
-            try {
-                synchronized (lock) {
-                    lock.wait(1000);
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            waitForEvent();
 
             if (handleDisconnection()) {
                 //trzeba wyjsc bylo disconnect i glosowanie za wyjsciem z gry
@@ -91,6 +86,16 @@ public class Server implements Sender {
         }
 
         //return 0;
+    }
+
+    private void waitForEvent() {
+        try {
+            synchronized (lock) {
+                lock.wait(1000);
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     public boolean serviceMessage(Message message, int who) {
@@ -112,7 +117,7 @@ public class Server implements Sender {
 
     public boolean serviceCommunicationMessage(CommunicationMessage message, int who) {
 
-        switch(message.getCommunicationMessageType()) {
+        switch (message.getCommunicationMessageType()) {
             case INFORMATION: {
                 Log.log(((Information) message).toString());
                 break;
@@ -126,13 +131,11 @@ public class Server implements Sender {
         }
 
 
-
         return false;
     }
 
     public void disconnectWith(int clientId) {
         clients.remove(clientId);
-        //do sth more...
         // powiadomic reszte graczy + glosownaie czy gramy dalej
         // glosowanie sie tez przyda gdy jeden juz wygra i trzeba podjac decyzje czy gramy dalej
     }
@@ -141,7 +144,7 @@ public class Server implements Sender {
         //noinspection ForLoopReplaceableByForEach
         for (Iterator<ClientHandler> it = clients.values().iterator(); it.hasNext(); ) {
             ClientHandler h = it.next();
-            if (!h.isAlive()) {
+            if (!h.isAlive() || h.isEnd()) {
                 Log.err("Gracz " + h.getClientId() + " rozłączył się!");
                 disconnectWith(h.getClientId());
                 return true;
@@ -159,6 +162,13 @@ public class Server implements Sender {
 
         ClientHandler handler = clients.get(clientId);
         return handler.sendMessage(message);
+    }
+
+    @Override
+    public void sendToAll(Message message) {
+        for (ClientHandler clientHandler : clients.values()) {
+            clientHandler.sendMessage(message);
+        }
     }
 
 
@@ -268,6 +278,10 @@ public class Server implements Sender {
         return lock;
     }
 
+    public void setGameService(GameService gameService) {
+        this.gameService = gameService;
+    }
+
     @Override
     public String toString() {
         return "Server{" +
@@ -279,18 +293,5 @@ public class Server implements Sender {
                 ", running=" + running +
                 ", logFlag=" + Log.logFlag +
                 '}';
-    }
-
-    protected static class Log {
-
-        public static boolean logFlag = true;
-
-        public static void log(String log) {
-            if (logFlag) System.out.println(log);
-        }
-
-        public static void err(String err) {
-            System.out.println("[error] " + err);
-        }
     }
 }

@@ -18,7 +18,12 @@ public abstract class Handler extends Thread {
 
     public abstract void disconnect();
 
+    public boolean isEnd() {
+        return isEnd;
+    }
+
     public void closeConnection() {
+        isEnd = true;
         connectionService.closeConnection();
     }
 }

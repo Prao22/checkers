@@ -15,6 +15,17 @@ import static org.mockito.Mockito.*;
 public class ClientHandlerTest {
 
     @Test
+    public void receiveNotAMessage() {
+        IConnectionService service = mock(ConnectionService.class);
+        when(service.receiveObject()).thenReturn("abc");
+
+        ClientHandler clientHandler = new ClientHandler(1, service, new Object());
+        clientHandler.start();
+
+        when(service.receiveObject()).thenReturn(null);
+    }
+
+    @Test
     public void unexpectedDisconnect() throws InterruptedException {
         IConnectionService service = mock(ConnectionService.class);
         when(service.receiveObject()).thenReturn(null);

@@ -1,25 +1,23 @@
 package Client;
 
 import Communication.End;
-import Communication.Information;
 import Communication.Message;
-import Communication.MessageType;
 import Connection.Handler;
 import Connection.IConnectionService;
-import Server.Server;
+import Utility.Log;
 
 import java.util.Queue;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.SynchronousQueue;
 
 public class ServerHandler extends Handler {
 
     private final Queue<Message> receive;
+    private final Object lock;
 
-    public ServerHandler(IConnectionService service) {
+    public ServerHandler(IConnectionService service, Object lock) {
         super(service);
         receive = new ConcurrentLinkedQueue<>();
+        this.lock = lock;
     }
 
     @Override
@@ -28,27 +26,42 @@ public class ServerHandler extends Handler {
         while (!isEnd) {
             try {
                 Message message = (Message) connectionService.receiveObject();
+
                 if (message == null) {
-                    System.out.println("Stracono połączenie z serwerem!");
-                    isEnd = true;
+                    Log.err("Stracono połączenie z serwerem!");
                     closeConnection();
+                    notifyClient();
                     return;
                 }
 
                 receive.add(message);
-                System.out.println("{CLIENT} Otrzymał wiadomość, dodano do kolejki");
+                Log.log("{CLIENT} Otrzymał wiadomość, dodano do kolejki");
+                notifyClient();
 
             } catch (ClassCastException exception) {
-                // nie wiadomo co zostalo wyslane
-                System.out.println("Otrzymałem nie zrozumiała wiadomość!");
+                Log.err("Otrzymałem nie zrozumiała wiadomość!");
             }
+        }
+    }
+
+    private void notifyClient() {
+        synchronized (lock) {
+            lock.notify();
         }
     }
 
     @Override
     public void disconnect() {
-        isEnd = true;
+        Log.log("Rozlaczam sie");
         connectionService.sendObject(new End());
         closeConnection();
+    }
+
+    public Message getNextMessage() {
+        return receive.poll();
+    }
+
+    public boolean isAnyMessage() {
+        return !receive.isEmpty();
     }
 }

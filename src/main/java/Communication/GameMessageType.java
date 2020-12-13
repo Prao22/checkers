@@ -1,5 +1,5 @@
 package Communication;
 
 public enum GameMessageType {
-    MOVE
+    MOVE, INFORMATION
 }

@@ -4,9 +4,9 @@ import Communication.End;
 import Communication.Message;
 import Connection.Handler;
 import Connection.IConnectionService;
+import Utility.Log;
 
 import java.util.Queue;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class ClientHandler extends Handler {
@@ -31,7 +31,7 @@ public class ClientHandler extends Handler {
             try {
                 Message message = (Message) connectionService.receiveObject();
                 if (message == null) {
-                    Server.Log.err("{CLIENT " + clientId + "} Rozłączył się!");
+                    Log.err("{CLIENT " + clientId + "} Rozłączył się!");
                     isEnd = true;
                     closeConnection();
                     return;
@@ -40,12 +40,12 @@ public class ClientHandler extends Handler {
 
                 receive.add(message);
 
-                Server.Log.log("{CLIENT " + clientId + "} Otrzymał wiadomość, dodano do kolejki");
+                Log.log("{CLIENT " + clientId + "} Otrzymał wiadomość, dodano do kolejki");
                 notifyServer();
 
             } catch (ClassCastException exception) {
                 // nie wiadomo co zostalo wyslane
-                Server.Log.err("{CLIENT " + clientId + "} Otrzymał nie zrozumiała wiadomość!");
+                Log.err("{CLIENT " + clientId + "} Otrzymał nie zrozumiała wiadomość!");
             }
         }
     }

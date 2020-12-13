@@ -5,7 +5,7 @@ public class Answer extends Message {
     private final boolean answer;
 
     public Answer(boolean answer) {
-        super(MessageType.ANSWER);
+        super(null);
         this.answer = answer;
     }
 
