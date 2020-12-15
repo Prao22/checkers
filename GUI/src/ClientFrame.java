@@ -44,9 +44,9 @@ class ClientFrame extends JFrame
 		JLabel labelHelper = new JLabel();
 		JLabel labelHelper2 = new JLabel();
 		add(labelTitle, new GBC(1,1).setFill(GBC.NONE).setAnchor(GBC.SOUTH).setWeight(100,100));
-		add(labelAuthors, new GBC(1,2).setFill(GBC.NONE).setAnchor(GBC.PAGE_START).setWeight(50,50));
-		add(labelHelper, new GBC(3,1).setFill(GBC.NONE).setWeight(100,100));
-		add(labelHelper2, new GBC(0,0).setFill(GBC.NONE).setWeight(100,100));
+		//add(labelAuthors, new GBC(1,2).setFill(GBC.NONE).setAnchor(GBC.PAGE_START).setWeight(50,50));
+	    //add(labelHelper, new GBC(3,1).setFill(GBC.NONE).setWeight(100,100));
+		//add(labelHelper2, new GBC(0,0).setFill(GBC.NONE).setWeight(100,100));
 	}
 	
 	void createTextComponents()
@@ -58,7 +58,7 @@ class ClientFrame extends JFrame
 	void createButtons()
 	{
 		CommitButton joinButton = new CommitButton("Join game");
-		add(joinButton.getButton(), new GBC(1,4).setAnchor(GBC.FIRST_LINE_END).setWeight(300,200));
+		add(joinButton.getButton(), new GBC(1,1).setWeight(50,50));
 	}
 	static TextComponent getTextField()
 	{
