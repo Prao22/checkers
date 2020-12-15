@@ -66,10 +66,13 @@ public class Client implements Sender, Connectable {
     private void serviceCommunicationMessage(CommunicationMessage message) {
         switch (message.getCommunicationMessageType()) {
             case INFORMATION: {
-
+                Log.log("Otrzymałem informacje dotyczaca komunikacji " + ((Information) message).toString());
+                break;
             }
 
             case END: {
+                gameService.showError("Serwer się rozłączył!");
+                disconnect();
                 break;
             }
         }

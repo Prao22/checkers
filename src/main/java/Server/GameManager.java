@@ -5,6 +5,7 @@ import Communication.GameInformation;
 import Communication.GameMessage;
 import Game.Game;
 import Game.GameParameters;
+import Utility.Log;
 
 public class GameManager implements GameService {
 
@@ -39,9 +40,9 @@ public class GameManager implements GameService {
     }
 
     public void informationHandler(GameInformation information, int playerId) {
-        System.out.println(information.getMessage());
-        sender.send(new GameInformation("Odebrlaem od ciebee " + information.getMessage()), playerId);
+        Log.log("Otrzymalem wiadomosc: \"" + information.getMessage() + "\" od gracza nr " + playerId);
         sender.sendToAll(new GameInformation("Mam nowa wiadomosc od kogos z was"));
+        sender.send(new GameInformation("Odebralem od ciebie wiadomosc " + information.getMessage()), playerId);
     }
 
     public void setSender(Sender sender) {

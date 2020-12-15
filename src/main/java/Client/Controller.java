@@ -2,11 +2,14 @@ package Client;
 
 import Communication.GameInformation;
 import Communication.GameMessage;
-import Communication.GameMessageType;
+import Communication.Parameters;
+import Game.GameParameters;
+import Utility.Log;
 
 public class Controller implements GameService {
 
     private ClientWindow window;
+    private GameParameters parameters;
     private Sender sender;
 
     public Controller() {
@@ -32,11 +35,30 @@ public class Controller implements GameService {
 
     @Override
     public void serviceMessage(GameMessage message) {
-        if (message.getGameMessageType() == GameMessageType.INFORMATION) {
-            System.out.println("Halo");
-            window.updateLabel(((GameInformation) message).getMessage());
-        } else {
-            System.out.println("co robic");
+
+        switch (message.getGameMessageType()) {
+            case INFORMATION: {
+                Log.log("Otrzymałem wiadomość: " + message.toString());
+                window.updateLabel(((GameInformation) message).getMessage());
+                break;
+            }
+
+            case MOVE: {
+                System.out.println(message.toString());
+                break;
+            }
+
+            case PARAMETERS: {
+                Log.log("Otrzymałem parametry: " + ((Parameters) message).getParameters().toString());
+                parameters = ((Parameters) message).getParameters();
+                break;
+            }
+
+            case YOUR_TURN: {
+                Log.log("Teraz jest moja tura i powinienem odesłać ruch");
+                break;
+            }
+
         }
     }
 

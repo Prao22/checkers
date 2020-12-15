@@ -88,8 +88,6 @@ public class InitWindow extends JDialog {
         });
 
         client.mainLoop();
-
-        System.out.println("konic");
     }
 
 

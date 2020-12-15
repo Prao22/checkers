@@ -30,6 +30,7 @@ public class Server implements Sender {
     public static void main(String[] args) {
         Server server = new Server();
         server.setGameService(new GameManager(server, server.getGameParameters()));
+
         ServerConsoleUI ui = new ServerConsoleUI(server, server.getLock());
         Thread uiThread = new Thread(ui);
         uiThread.start();
