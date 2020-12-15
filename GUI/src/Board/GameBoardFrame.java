@@ -18,6 +18,6 @@ public class GameBoardFrame extends JFrame {
 		
 		setSize(DEFAULT_WIDTH,DEFAULT_HEIGHT);
 		setTitle("Chinese Checkers");
-		add(new Whiteboard2(DEFAULT_WIDTH/2,DEFAULT_HEIGHT/2));
+		add(new Whiteboard(DEFAULT_WIDTH/2,DEFAULT_HEIGHT/2));
 	}
 }
