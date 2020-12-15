@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.net.Socket;
 
 
-public class Client implements Sender {
+public class Client implements Sender, Connectable {
 
     private ServerHandler handler;
     private boolean connected = false;
@@ -96,6 +96,11 @@ public class Client implements Sender {
     private void disconnectWithoutNotifying() {
         connected = false;
         handler.closeConnection();
+    }
+
+    @Override
+    public boolean connect(String ip, int port) {
+        return setHandler(ip, port);
     }
 
     @Override
