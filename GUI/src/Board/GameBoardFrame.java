@@ -22,13 +22,20 @@ public class GameBoardFrame extends JFrame {
 		
 		setSize(DEFAULT_WIDTH,DEFAULT_HEIGHT);
 		setTitle("Chinese Checkers");
-		//add(new Whiteboard(DEFAULT_WIDTH/2,DEFAULT_HEIGHT/2));
-		setLayout(new BorderLayout());
+
+		setLayout(new BorderLayout(1,1));
 		JButton button = new JButton("Wykonaj ruch");
-		add(button,BorderLayout.EAST);
+		add(button,BorderLayout.LINE_END);
+		
+		//tuataj jest ten guzik
+		/*
+		 * 
+		 */
 		Click clickButton = new Click();
 		button.addActionListener(clickButton);
-		add(new Whiteboard(DEFAULT_WIDTH/2,DEFAULT_HEIGHT/2),BorderLayout.CENTER);
+		
+		
+		add(new Whiteboard(4,4),BorderLayout.CENTER);
 	}
 	private class Click implements ActionListener
 	{

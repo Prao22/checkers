@@ -12,7 +12,6 @@ public class GameBoardTest {
 				GameBoardFrame frame = new GameBoardFrame();
 				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				frame.setVisible(true);
-			//	frame.pack();
 			});
 	}
 

@@ -1,5 +1,6 @@
 package Board;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
@@ -16,37 +17,40 @@ import javax.swing.JOptionPane;
 
 
 public class BoardField{
-	private Ellipse2D circle;
+	private final Ellipse2D circle;
 	private final int[] Coordinates;
-	private boolean isTaken;
-
-	BoardField(int x, int y, Ellipse2D circle)
+	private Color color;
+	BoardField(int x, int y, Ellipse2D circle,Color c)
 	{
 		Coordinates = new int[2];
 		Coordinates[0]=x;
 		Coordinates[1]=y;
 		this.circle=circle;
-		isTaken=false;
+		this.color = c;
 	}
-	
 	int[] getCoordinates()
 	{
 		return Coordinates;
 	}
+	
+	
 	Ellipse2D getCircle()
 	{
 		return this.circle;
 	}
-	boolean isTaken()
+	
+	
+	
+	Color getColor()
 	{
-		return isTaken;
+		return this.color;
 	}
 	
 	
-	void setTaken(boolean bool)
+	void setColor(Color c)
 	{
-		this.isTaken = bool;
+		this.color =c;
 	}
 	
-	}
+}
 
