@@ -1,21 +1,25 @@
 package Board;
 
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.geom.Ellipse2D;
+import java.awt.geom.Rectangle2D;
 
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 
 
 
-public class BoardField extends JComponent{
+public class BoardField{
 	private Ellipse2D circle;
 	private final int[] Coordinates;
 	private boolean isTaken;
-	private Pawn pawn;
+
 	BoardField(int x, int y, Ellipse2D circle)
 	{
 		Coordinates = new int[2];
@@ -24,6 +28,7 @@ public class BoardField extends JComponent{
 		this.circle=circle;
 		isTaken=false;
 	}
+	
 	int[] getCoordinates()
 	{
 		return Coordinates;
@@ -36,16 +41,12 @@ public class BoardField extends JComponent{
 	{
 		return isTaken;
 	}
-	void setPawn(Pawn pawn)
-	{
-		this.pawn=pawn;
-	}
-	void delatePawn()
-	{
-		this.pawn=null;
-	}
+	
+	
 	void setTaken(boolean bool)
 	{
 		this.isTaken = bool;
 	}
-}
+	
+	}
+
