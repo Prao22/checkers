@@ -3,8 +3,9 @@ package Utility;
 
 public class BoardCreator {
     public static boolean[][] createBoard(int size) {
-        int rows = 4 * size + 1;
-        int cols = 3 * size + 1;
+        int rows = howManyRows(size);
+        int cols = howManyCols(size);
+
         boolean[][] board = new boolean[rows][cols];
 
         for (int row = 0; row < size; row++) {
@@ -25,8 +26,14 @@ public class BoardCreator {
             fillPeak(row, cols, k, board);
         }
 
-
         return board;
+    }
+
+    public static int howManyRows(int size) {
+        return 4 * size + 1;
+    }
+    public static int howManyCols(int size) {
+        return 3 * size + 1;
     }
 
     private static void fillPeak(int row, int cols, int k, boolean[][] board) {

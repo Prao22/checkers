@@ -1,12 +1,16 @@
 package Communication;
 
-public class Answer extends Message {
+public class Answer extends GameMessage {
 
     private final boolean answer;
 
     public Answer(boolean answer) {
-        super(null);
+        super(GameMessageType.ANSWER);
         this.answer = answer;
+    }
+
+    public boolean getAnswer() {
+        return answer;
     }
 
     @Override

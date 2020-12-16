@@ -2,6 +2,7 @@ package Connection;
 
 import Communication.Message;
 import Connection.IConnectionService;
+import Utility.Log;
 
 public abstract class Handler extends Thread {
 
@@ -24,6 +25,8 @@ public abstract class Handler extends Thread {
 
     public void closeConnection() {
         isEnd = true;
+        //Log.log("Zamykam połączenie...");
         connectionService.closeConnection();
+        //Log.log("Zamknięto!");
     }
 }

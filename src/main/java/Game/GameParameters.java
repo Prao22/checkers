@@ -1,7 +1,9 @@
 package Game;
 
-public class GameParameters {
-    private int numberPlayers = 1;
+import java.io.Serializable;
+
+public class GameParameters implements Serializable {
+    private int numberPlayers = 2;
     private int numberFields = 4;
     private int numberCounter = 10;
     private boolean blocks = true;

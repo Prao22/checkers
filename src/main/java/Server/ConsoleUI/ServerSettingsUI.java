@@ -82,7 +82,7 @@ public class ServerSettingsUI extends ConsoleUI {
 
         int field = getInt();
 
-        if (field > 3) {
+        if (field > 0) {
             gameParameters.setNumberFields(field);
         }
     }

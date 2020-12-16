@@ -1,6 +1,8 @@
 package Client.InitConnection;
 
 import Client.*;
+import Client.GUI.GameWindow;
+import Game.Game;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -15,7 +17,7 @@ public class InitWindow extends JDialog {
     private JButton joinButton;
 
     public InitWindow(ServerConnector connector) {
-        super((JDialog)null); // Aby okno pokazało się rownież na taskbarze.
+        super((JDialog) null); // Aby okno pokazało się rownież na taskbarze.
         serverConnector = connector;
 
         setModal(true);
@@ -65,14 +67,13 @@ public class InitWindow extends JDialog {
 
 
     public static void main(String[] args) {
-
         Client client = new Client();
         ServerConnector connector = new ServerConnector(client);
 
         InitWindow init = new InitWindow(connector);
         init.waitForInput();
 
-        if(!client.isConnected()) {
+        if (!client.isConnected()) {
             return;
         }
 
@@ -81,12 +82,17 @@ public class InitWindow extends JDialog {
         client.setGameService(controller);
         controller.setSender(client);
 
-        EventQueue.invokeLater(() ->
-        {
-            ClientWindow frame = new ClientWindow(controller);
-            controller.setWindow(frame);
-        });
+        // EventQueue.invokeLater(() ->
+        // {
+//        ClientWindow frame = new ClientWindow(controller);
+//        GUIController guiController = new GUIController(frame);
+//        controller.setGuiController(guiController);
+        // });
 
+        GUIController guiController = new GUIController(controller);
+        GameWindow window = new GameWindow(guiController);
+        guiController.setWindow(window);
+        controller.setGuiController(guiController);
         client.mainLoop();
     }
 
@@ -107,7 +113,6 @@ public class InitWindow extends JDialog {
                     close();
                 } else {
                     JOptionPane.showMessageDialog(null, "Nie mozna polaczyc sie z serwerem o podanym adresie IP i PORT");
-                    ;
                 }
             }
         }

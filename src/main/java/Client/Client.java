@@ -2,6 +2,7 @@ package Client;
 
 import Communication.*;
 import Connection.ConnectionService;
+import Game.CounterColor;
 import Utility.Log;
 
 import java.io.IOException;
@@ -54,11 +55,9 @@ public class Client implements Sender, Connectable {
         }
 
         if (message.getType() == MessageType.COMMUNICATION) {
-            //klient sie tym zajmuje
             serviceCommunicationMessage((CommunicationMessage) message);
 
         } else if (message.getType() == MessageType.GAME) {
-            //przekazuje do managera gry
             gameService.serviceMessage((GameMessage) message);
         }
     }
@@ -70,7 +69,17 @@ public class Client implements Sender, Connectable {
                 break;
             }
 
+            case DISCONNECTION: {
+                Disconnection disconnection = (Disconnection) message;
+                Log.err("Gracz o id " + disconnection.getPlayerId() + " i kolorze " +
+                        CounterColor.getFromNumber(disconnection.getPlayerId()) + " się rozłączył!");
+                gameService.showError("Gracz o id " + disconnection.getPlayerId() + " i kolorze " +
+                        CounterColor.getFromNumber(disconnection.getPlayerId()) + " się rozłączył!");
+                break;
+            }
+
             case END: {
+                Log.err("Sygnał END");
                 gameService.showError("Serwer się rozłączył!");
                 disconnect();
                 break;
@@ -113,7 +122,7 @@ public class Client implements Sender, Connectable {
 
     @Override
     public void disconnect() {
-        if(connected) {
+        if (connected) {
             handler.disconnect();
             connected = false;
         }

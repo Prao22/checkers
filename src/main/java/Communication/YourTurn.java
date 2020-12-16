@@ -1,7 +1,7 @@
 package Communication;
 
 public class YourTurn extends GameMessage {
-    YourTurn() {
+    public YourTurn() {
         super(GameMessageType.YOUR_TURN);
     }
 }

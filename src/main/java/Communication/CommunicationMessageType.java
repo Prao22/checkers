@@ -1,5 +1,5 @@
 package Communication;
 
 public enum CommunicationMessageType {
-    INFORMATION, END;
+    INFORMATION, END, DISCONNECTION
 }

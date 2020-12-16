@@ -40,14 +40,22 @@ public class Server implements Sender {
 
     public void waitForPlayers() throws IOException {
         while (onlineClients < gameParameters.getNumberPlayers()) {
-            clients.put(onlineClients + 1, new ClientHandler(onlineClients + 1,
-                    new ConnectionService(serverSocket.accept()), lock));
-            clients.get(onlineClients + 1).start();
+            addClient();
             onlineClients++;
-            Log.log("Dołączył gracz.");
         }
 
         Log.log("Wszyscy dołączyli.");
+    }
+
+    private void addClient() throws IOException {
+        clients.put(onlineClients + 1, new ClientHandler(onlineClients + 1,
+                new ConnectionService(serverSocket.accept()), lock));
+
+        //sendToAll(new GameInformation("Dołączył kolejny gracz aktualny stan: " + (onlineClients + 1) + "/" + gameParameters.getNumberPlayers()));
+        clients.get(onlineClients + 1).start();
+        gameService.addPlayer(onlineClients + 1);
+        send(new Parameters(gameParameters), onlineClients + 1);
+        Log.log("Dołączył gracz.");
     }
 
     public void run() {
@@ -68,25 +76,32 @@ public class Server implements Sender {
 
     private int mainLoop() {
 
-        while (true) {
+        for(ClientHandler c : clients.values()) {
+            c.sendMessage(new Start(c.getClientId()));
+        }
 
+        gameService.start();
+
+        while (!isEnd() && isRunning() && onlineClients > 0 ) {
+
+            Log.log("Klinetow: " + onlineClients);
             waitForEvent();
 
-            if (handleDisconnection()) {
+            if (checkDisconnection()) {
+                setEnd(true);
+                break;
                 //trzeba wyjsc bylo disconnect i glosowanie za wyjsciem z gry
             }
 
             for (ClientHandler h : clients.values()) {
                 if (h.isAnyMessage()) {
                     Message message = h.getNextMessage();
-                    if (!serviceMessage(message, h.getClientId())) {
-                        //cos sie stalo ze trzeba wyjsc?
-                    }
+                    serviceMessage(message, h.getClientId());
                 }
             }
         }
 
-        //return 0;
+        return 0;
     }
 
     private void waitForEvent() {
@@ -126,7 +141,7 @@ public class Server implements Sender {
 
             case END: {
                 Log.log("Klient " + who + " chce wyjść!");
-                disconnectWith(who);
+                handleDisconnection(who);
                 return true;
             }
         }
@@ -137,18 +152,24 @@ public class Server implements Sender {
 
     public void disconnectWith(int clientId) {
         clients.remove(clientId);
-        // powiadomic reszte graczy + glosownaie czy gramy dalej
-        // glosowanie sie tez przyda gdy jeden juz wygra i trzeba podjac decyzje czy gramy dalej
+        onlineClients--;
+        // daj info do game managera
     }
 
-    public boolean handleDisconnection() {
+    public boolean handleDisconnection(int clientId) {
+        disconnectWith(clientId);
+        sendToAll(new Disconnection(clientId));
+        sendToAll(new Voting("Czy chcesz kontynuować gre?"));
+        return onlineClients == 0;//resultOfVoting;
+    }
+
+    public boolean checkDisconnection() {
         //noinspection ForLoopReplaceableByForEach
         for (Iterator<ClientHandler> it = clients.values().iterator(); it.hasNext(); ) {
             ClientHandler h = it.next();
             if (!h.isAlive() || h.isEnd()) {
                 Log.err("Gracz " + h.getClientId() + " rozłączył się!");
-                disconnectWith(h.getClientId());
-                return true;
+                return handleDisconnection(h.getClientId());
             }
         }
 

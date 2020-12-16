@@ -3,20 +3,14 @@ package Communication;
 
 public class Move extends GameMessage {
 
-    private final int[] from;
-    private final int[] to;
+    private final Game.Move move;
 
-    public Move(int[] from, int[] to) {
+    public Move(Game.Move move) {
         super(GameMessageType.MOVE);
-        this.from = from;
-        this.to = to;
+        this.move = move;
     }
 
-    @Override
-    public String toString() {
-        return "Move{" +
-                "from=" + from +
-                ", to=" + to +
-                '}';
+    public Game.Move getMove() {
+        return move;
     }
 }
