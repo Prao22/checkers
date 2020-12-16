@@ -37,8 +37,6 @@ public class Whiteboard extends JComponent{
 	public void paintComponent(Graphics g)
 	{
 		Graphics2D g2 = (Graphics2D) g;
-		Ellipse2D circle2 = new Ellipse2D.Double(120+100*size,80,2*size*100,2*size*100);
-		g2.draw(circle2);
 		Color defaultColor = this.getBackground();
 		for(int i=0;i<3*size +1;i++)
 		{
