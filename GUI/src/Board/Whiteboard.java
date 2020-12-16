@@ -13,7 +13,13 @@ import javax.swing.JComponent;
 
 import Utility.BoardCreator;
 
-
+/*
+ * 
+ * Obsluga przycisku znajduje sie w klasie GameBoardFrame
+ * 
+ * 
+ * 
+ */
 
 public class Whiteboard extends JComponent{
 	private BoardCreator boardCreator;
@@ -25,9 +31,9 @@ public class Whiteboard extends JComponent{
 		boardCreator = new BoardCreator();
 		template=BoardCreator.createBoard(size);
 		ClickAction click =new ClickAction();
-		
 		addMouseListener(click);
 	}
+	
 	public void paintComponent(Graphics g)
 	{
 		Graphics2D g2 = (Graphics2D) g;
@@ -80,6 +86,14 @@ public class Whiteboard extends JComponent{
 		private int[] setB = new int[2];
 		private int[][] pair = new int[1][1];
 		
+		/*
+		 * po nacisnieciu myszy tutaj sie przetwarza
+		 * 
+		 * 
+		 * 
+		 * 
+		 * 
+		 */
 		public void mousePressed(MouseEvent event)
 		{
 			for(int i =0;i<size*3+1;i++)
@@ -115,6 +129,18 @@ public class Whiteboard extends JComponent{
 		
 			
 }
+	/*
+	 * Ponizej znajduje sie jedynie rysowanie pionkow
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 */
 	void paintSideA(Graphics g)
 	{
 		Graphics2D g2 = (Graphics2D) g;
@@ -218,6 +244,6 @@ public class Whiteboard extends JComponent{
 				}
 		}
 	}
-	}
+}
 
 
