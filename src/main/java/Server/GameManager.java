@@ -33,7 +33,7 @@ public class GameManager implements GameService {
             }
 
             case MOVE: {
-                Log.log("Gracz " + playerId + " chce zrobić ruch " + ((Move) message).toString());
+                Log.log("Gracz " + playerId + " chce zrobić ruch " + message.toString());
                 moveHandler((Move) message, playerId);
                 break;
             }
@@ -70,10 +70,11 @@ public class GameManager implements GameService {
             game.makeMove(move.getMove());
             sender.send(new Answer(true), playerId);
             sender.sendToAll(move);
-            sender.send(new YourTurn(), game.whoseTurn());
         } else {
             sender.send(new Answer(false), playerId);
         }
+
+        sender.send(new YourTurn(), game.whoseTurn());
     }
 
 
