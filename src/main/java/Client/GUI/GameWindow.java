@@ -20,19 +20,15 @@ public class GameWindow extends JFrame implements WindowListener {
         setTitle(GAME_NAME);
         title = new TitleLabel(GAME_NAME);
         footer = new Footer();
-        //board = new Board(4, 4, 10, observer);
         this.observer = observer;
 
         this.getContentPane().setLayout(new BorderLayout());
         this.getContentPane().add(title, BorderLayout.NORTH);
-        //this.getContentPane().add(board, BorderLayout.CENTER);
         this.getContentPane().add(footer, BorderLayout.SOUTH);
 
         setResizable(false);
         setLocationRelativeTo(null);
-        pack();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setVisible(true);
     }
 
     public void updateFooter(int onlinePlayers, int maxPlayers, String text) {
@@ -55,8 +51,9 @@ public class GameWindow extends JFrame implements WindowListener {
     public void setBoardParameters(int sizeOfBoard, int players, int counters) {
         //this.getContentPane().remove(board);
         this.board = new Board(sizeOfBoard, players, counters, observer);
-        this.getContentPane().add(board, BorderLayout.CENTER);
+        getContentPane().add(this.board, BorderLayout.CENTER);
         pack();
+        setVisible(true);
     }
 
     @Override

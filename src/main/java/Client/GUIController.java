@@ -64,7 +64,7 @@ public class GUIController implements GUIService, GUIObserver {
     }
 
     @Override
-    public void updateBoardParameters(int size, int numberOfPlayers, int numberOfCounters) {
+    public void setBoardParameters(int size, int numberOfPlayers, int numberOfCounters) {
         mainWindow.setBoardParameters(size, numberOfPlayers, numberOfCounters);
     }
 

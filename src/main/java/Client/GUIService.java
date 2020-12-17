@@ -9,6 +9,6 @@ public interface GUIService {
     void updatePlayerInfo(int playerId);
     void updateTurnInfo(boolean turn);
     void showInfo(String info);
-    void updateBoardParameters(int size, int numberOfPlayers, int numberOfCounters);
+    void setBoardParameters(int size, int numberOfPlayers, int numberOfCounters);
     void resetClicks();
 }
