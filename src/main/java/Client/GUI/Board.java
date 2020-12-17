@@ -163,7 +163,7 @@ public class Board extends JPanel {
     }
 
     private void paintSideC(CounterColor color) {
-        int counter = 0;
+        int counter;
         int set = 0;
         for (int i = 2 * size + 1; i < 3 * size + 1; i++) {
             set++;
@@ -181,7 +181,7 @@ public class Board extends JPanel {
     private void paintSideD(CounterColor color) {
 
         for (int i = 3 * size + 1; i < 4 * size + 1; i++) {
-            for (int j = 4; j < 2 * size; j++) {
+            for (int j = size; j < 2 * size + 1; j++) {
                 if (fields[i][j] != null) {
                     fields[i][j].setColor(color.getJavaColor());
                 }
@@ -190,7 +190,7 @@ public class Board extends JPanel {
     }
 
     private void paintSideE(CounterColor color) {
-        int counter = 0;
+        int counter;
         int set = 0;
         for (int i = 2 * size + 1; i < 3 * size + 1; i++) {
             set++;

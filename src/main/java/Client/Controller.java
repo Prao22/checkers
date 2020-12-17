@@ -79,8 +79,8 @@ public class Controller implements GameService, GameController {
     private void parametersHandler(Parameters mParameters) {
         parameters = mParameters.getParameters();
         Log.log("Otrzymałem parametry: " + parameters.toString());
+        guiController.setBoardParameters(parameters.getNumberFields(), parameters.getNumberPlayers(), parameters.getNumberCounter());
         guiController.updateFooter(parameters.getNumberPlayers(), parameters.getNumberPlayers(), null);
-        guiController.updateBoardParameters(parameters.getNumberFields(), parameters.getNumberPlayers(), parameters.getNumberCounter());
         guiController.showInfo("Zasady gry: \nLiczba graczy: " + parameters.getNumberPlayers() +
                 "\nLiczba pionkow: " + parameters.getNumberCounter() +
                 "\nRozmiar planszy: " + parameters.getNumberFields() +
