@@ -12,10 +12,6 @@ public class Turn {
         randomFirst();
     }
 
-    public void removePlayer(int id) {
-        players.remove(id);
-    }
-
     public int nextTurn() {
 
         if(players.size() == 0) {

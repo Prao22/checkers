@@ -89,12 +89,13 @@ public class Server implements Sender {
 
             if (checkDisconnection()) {
                 setEnd(true);
+                Log.log("Wychodze z głównej petli!");
                 break;
                 //trzeba wyjsc bylo disconnect i glosowanie za wyjsciem z gry
             }
 
             for (ClientHandler h : clients.values()) {
-                if (h.isAnyMessage()) {
+                while (h.isAnyMessage()) {
                     Message message = h.getNextMessage();
                     serviceMessage(message, h.getClientId());
                 }
@@ -114,10 +115,7 @@ public class Server implements Sender {
         }
     }
 
-    public boolean serviceMessage(Message message, int who) {
-        if (message == null) {
-            return true;
-        }
+    public void serviceMessage(Message message, int who) {
 
         if (message.getType() == MessageType.COMMUNICATION) {
             //serwer sie tym zajmuje
@@ -127,11 +125,9 @@ public class Server implements Sender {
             //przekazuje do managera gry
             gameService.serviceMessage((GameMessage) message, who);
         }
-
-        return true;
     }
 
-    public boolean serviceCommunicationMessage(CommunicationMessage message, int who) {
+    public void serviceCommunicationMessage(CommunicationMessage message, int who) {
 
         switch (message.getCommunicationMessageType()) {
             case INFORMATION: {
@@ -142,24 +138,21 @@ public class Server implements Sender {
             case END: {
                 Log.log("Klient " + who + " chce wyjść!");
                 handleDisconnection(who);
-                return true;
+                break;
             }
         }
-
-
-        return false;
     }
 
     public void disconnectWith(int clientId) {
         clients.remove(clientId);
         onlineClients--;
-        // daj info do game managera
+        gameService.removePlayer(clientId);
     }
 
     public boolean handleDisconnection(int clientId) {
         disconnectWith(clientId);
         sendToAll(new Disconnection(clientId));
-        sendToAll(new Voting("Czy chcesz kontynuować gre?"));
+        //sendToAll(new Voting("Czy chcesz kontynuować gre?"));
         return onlineClients == 0;//resultOfVoting;
     }
 

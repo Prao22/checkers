@@ -24,7 +24,6 @@ public class Board extends JPanel {
     private final int numberOfPlayers;
     private final int numberOfCounters;
     private final BoardObserver observer;
-
     private BoardField[][] fields;
 
     public Board(int size, int numberOfPlayers, int numberOfCounters, BoardObserver observer) {
@@ -67,40 +66,12 @@ public class Board extends JPanel {
 
         }
 
-        switch (numberOfPlayers) {
-            case 2:
-                paintSideA(CounterColor.getFromNumber(1));
-                paintSideD(CounterColor.getFromNumber(2));
-                break;
-
-            case 3:
-                paintSideA(CounterColor.getFromNumber(1));
-                paintSideC(CounterColor.getFromNumber(2));
-                paintSideE(CounterColor.getFromNumber(3));
-
-            case 4:
-                paintSideB(CounterColor.getFromNumber(1));
-                paintSideC(CounterColor.getFromNumber(2));
-                paintSideE(CounterColor.getFromNumber(3));
-                paintSideF(CounterColor.getFromNumber(4));
-
-                break;
-
-            case 6:
-                paintSideA(CounterColor.getFromNumber(1));
-                paintSideB(CounterColor.getFromNumber(2));
-                paintSideC(CounterColor.getFromNumber(3));
-                paintSideD(CounterColor.getFromNumber(4));
-                paintSideE(CounterColor.getFromNumber(5));
-                paintSideF(CounterColor.getFromNumber(6));
-                break;
-        }
+        paintCorners(template);
     }
 
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-
         Graphics2D g2 = (Graphics2D) g;
 
         for (int i = 0; i < 3 * size + 1; i++) {
@@ -113,6 +84,7 @@ public class Board extends JPanel {
     }
 
     public void move(int[] pairA, int[] pairB) {
+
         //zapisujemy kolor pola A
         Color temporary = fields[pairA[0]][pairA[1]].getColor();
 
@@ -123,6 +95,20 @@ public class Board extends JPanel {
         //zapisany kolor pola A przypisujemy do pola B
         fields[pairB[0]][pairB[1]].setColor(temporary);
         repaint(fields[pairB[0]][pairB[1]].getBounds());
+    }
+
+    public void highlightField(int row, int col) {
+        fields[row][col].setHighlighted(true);
+        repaint(fields[row][col].getBounds());
+    }
+
+    public void normalField(int row, int col) {
+        fields[row][col].setHighlighted(false);
+        repaint(fields[row][col].getBounds());
+    }
+
+    public Color getColorOfField(int row, int col) {
+        return fields[row][col].getColor();
     }
 
     private class ClickAction extends MouseAdapter {
@@ -138,82 +124,41 @@ public class Board extends JPanel {
         }
     }
 
-    private void paintSideA(CounterColor color) {
+    private void paintCorners(boolean[][] board) {
+        switch (numberOfPlayers) {
+            case 2:
+                paintCorner(BoardCreator.cornerA(board, size, numberOfCounters), CounterColor.getFromNumber(1));
+                paintCorner(BoardCreator.cornerD(board, size, numberOfCounters), CounterColor.getFromNumber(2));
+                break;
 
-        for (int i = 0; i < size; i++) {
-            for (int j = size - 1; j < 2 * size + 1; j++)
-                if (fields[i][j] != null) {
-                    fields[i][j].setColor(color.getJavaColor());
-                }
+            case 3:
+                paintCorner(BoardCreator.cornerA(board, size, numberOfCounters), CounterColor.getFromNumber(1));
+                paintCorner(BoardCreator.cornerC(board, size, numberOfCounters), CounterColor.getFromNumber(2));
+                paintCorner(BoardCreator.cornerE(board, size, numberOfCounters), CounterColor.getFromNumber(3));
+                break;
+
+            case 4:
+                paintCorner(BoardCreator.cornerB(board, size, numberOfCounters), CounterColor.getFromNumber(1));
+                paintCorner(BoardCreator.cornerC(board, size, numberOfCounters), CounterColor.getFromNumber(2));
+                paintCorner(BoardCreator.cornerE(board, size, numberOfCounters), CounterColor.getFromNumber(3));
+                paintCorner(BoardCreator.cornerF(board, size, numberOfCounters), CounterColor.getFromNumber(4));
+                break;
+
+            case 6:
+                paintCorner(BoardCreator.cornerA(board, size, numberOfCounters), CounterColor.getFromNumber(1));
+                paintCorner(BoardCreator.cornerB(board, size, numberOfCounters), CounterColor.getFromNumber(2));
+                paintCorner(BoardCreator.cornerC(board, size, numberOfCounters), CounterColor.getFromNumber(3));
+                paintCorner(BoardCreator.cornerD(board, size, numberOfCounters), CounterColor.getFromNumber(4));
+                paintCorner(BoardCreator.cornerE(board, size, numberOfCounters), CounterColor.getFromNumber(5));
+                paintCorner(BoardCreator.cornerF(board, size, numberOfCounters), CounterColor.getFromNumber(6));
+
+                break;
         }
     }
 
-    private void paintSideB(CounterColor color) {
-
-        int counter;
-        for (int i = size; i < 2 * size; i++) {
-            counter = size - i % size;
-            for (int j = 0; j < size && counter != 0; j++)
-                if (fields[i][j] != null) {
-                    fields[i][j].setColor(color.getJavaColor());
-                    counter--;
-
-                }
-        }
-    }
-
-    private void paintSideC(CounterColor color) {
-        int counter;
-        int set = 0;
-        for (int i = 2 * size + 1; i < 3 * size + 1; i++) {
-            set++;
-            counter = set;
-            for (int j = 0; j < size && counter != 0; j++) {
-                if (fields[i][j] != null) {
-                    fields[i][j].setColor(color.getJavaColor());
-                    counter--;
-                }
-            }
-        }
-
-    }
-
-    private void paintSideD(CounterColor color) {
-
-        for (int i = 3 * size + 1; i < 4 * size + 1; i++) {
-            for (int j = size; j < 2 * size + 1; j++) {
-                if (fields[i][j] != null) {
-                    fields[i][j].setColor(color.getJavaColor());
-                }
-            }
-        }
-    }
-
-    private void paintSideE(CounterColor color) {
-        int counter;
-        int set = 0;
-        for (int i = 2 * size + 1; i < 3 * size + 1; i++) {
-            set++;
-            counter = set;
-            for (int j = 3 * size; j > 2 * size && counter != 0; j--) {
-                if (fields[i][j] != null) {
-                    fields[i][j].setColor(color.getJavaColor());
-                    counter--;
-                }
-            }
-        }
-    }
-
-    private void paintSideF(CounterColor color) {
-
-        int counter;
-        for (int i = size; i < 2 * size; i++) {
-            counter = size - i % size;
-            for (int j = 3 * size; j > 2 * size && counter != 0; j--)
-                if (fields[i][j] != null) {
-                    fields[i][j].setColor(color.getJavaColor());
-                    counter--;
-                }
+    private void paintCorner(int[][] corner, CounterColor color) {
+        for (int i = 0; i < numberOfCounters; i++) {
+            fields[corner[i][0]][corner[i][1]].setColor(color.getJavaColor());
         }
     }
 

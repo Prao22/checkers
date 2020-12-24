@@ -1,16 +1,17 @@
 package Client.GUI;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.geom.Ellipse2D;
 
 
 public class BoardField extends Ellipse2D.Double {
     private static final int DIAMETER = 60;
+    private static final Color HIGHLIGHT_COLOR = Color.ORANGE;
     private final int[] coordinates;
     private Color color;
+    private boolean highlighted = false;
 
-    BoardField(int x, int y, Color c) {
+    public BoardField(int x, int y, Color c) {
         super(0, 0, DIAMETER, DIAMETER);
         coordinates = new int[2];
         coordinates[0] = x;
@@ -18,14 +19,31 @@ public class BoardField extends Ellipse2D.Double {
         this.color = c;
     }
 
-    void draw(Graphics2D g2) {
+    public void draw(Graphics2D g2, Color border) {
         g2.setColor(color);
-        g2.draw(this);
         g2.fill(this);
+
+        if (highlighted) {
+            g2.setStroke(new BasicStroke((float) (DIAMETER / 10.0)));
+        }
+
+        g2.setColor(border);
+        g2.draw(this);
     }
 
+    public void draw(Graphics2D g2) {
+        if (highlighted) {
+            draw(g2, HIGHLIGHT_COLOR);
+        } else {
+            draw(g2, color);
+        }
+    }
 
-    int[] getCoordinates() {
+    public void setHighlighted(boolean highlighted) {
+        this.highlighted = highlighted;
+    }
+
+    public int[] getCoordinates() {
         return coordinates;
     }
 
@@ -33,7 +51,7 @@ public class BoardField extends Ellipse2D.Double {
         this.color = color;
     }
 
-    Color getColor() {
+    public Color getColor() {
         return this.color;
     }
 

@@ -76,17 +76,23 @@ public class GUIController implements GUIService, GUIObserver {
 
     @Override
     public void clickNotify(int row, int col) {
-        System.out.println("Przyjmuje klik na row: " + row + " i col: " + col);
+
+        if(!observedBoard.getColorOfField(row, col).equals(gameController.getColor().getJavaColor()) && !secondClick)
+        {
+            return;
+        }
+
 
         if (secondClick) {
             gameController.setMove(new Game.Move(firstClick, new int[]{row, col}));
             secondClick = false;
+            observedBoard.normalField(firstClick[0], firstClick[1]);
             firstClick = null;
         } else {
             firstClick = new int[]{row, col};
             secondClick = true;
+            observedBoard.highlightField(row, col);
         }
-
     }
 
     @Override

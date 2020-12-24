@@ -49,7 +49,10 @@ public class GameManager implements GameService {
 
     @Override
     public void removePlayer(int playerId) {
-        game.removePlayer(playerId);
+        if (game.removePlayer(playerId)) {
+            sender.send(new YourTurn(), game.whoseTurn());
+        }
+
     }
 
     @Override
@@ -66,6 +69,10 @@ public class GameManager implements GameService {
     }
 
     private void moveHandler(Communication.Move move, int playerId) {
+        if(playerId != game.whoseTurn()) {
+            return;
+        }
+
         if (game.checkIfMoveIsValid(move.getMove())) {
             game.makeMove(move.getMove());
             sender.send(new Answer(true), playerId);

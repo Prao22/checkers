@@ -25,7 +25,7 @@ public class Client implements Sender, Connectable {
             waitForEvent();
             checkDisconnection();
 
-            if (handler.isAnyMessage()) {
+            while (handler.isAnyMessage()) {
                 serviceMessage(handler.getNextMessage());
             }
         }

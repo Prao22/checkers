@@ -107,6 +107,11 @@ public class Controller implements GameService, GameController {
     }
 
     @Override
+    public CounterColor getColor() {
+        return CounterColor.getFromNumber(myPlayerId);
+    }
+
+    @Override
     public void setMove(Game.Move move) {
         if(myTurn) {
             myTurn = false;

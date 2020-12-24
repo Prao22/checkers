@@ -7,8 +7,20 @@ public class Field {
 
     protected Counter counter = null;
     protected Field[] neighbours = null;
+    protected final int row;
+    protected final int col;
 
-    Field() {
+    Field(int row, int col) {
+        this.row = row;
+        this.col = col;
+    }
+
+    public int getRow() {
+        return row;
+    }
+
+    public int getCol() {
+        return col;
     }
 
     public boolean hasCounter() {
@@ -25,6 +37,17 @@ public class Field {
         this.neighbours = neighbours;
     }
 
+    public boolean isNeighbour(Field check) {
+        for(int i = 0; i < MAX_NEIGHBOURS; i++)
+        {
+            if(neighbours[i] == check) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     @Override
     public String toString() {
         for(int i = 0; i < MAX_NEIGHBOURS; i++) {
@@ -35,6 +58,7 @@ public class Field {
 
         return "";
     }
+
 
     public static class Direction {
         public static final int NE = 0;
