@@ -15,7 +15,7 @@ import Utility.BoardCreator;
 
 public class Board extends JPanel {
 
-    private static final int MARGINS = 100;
+    private static final int MARGINS = 250;
     private static final int MARGIN_BETWEEN = BoardField.getDiameter() / 8;
     private static final int OFFSET = BoardField.getDiameter() / 2;
     private final int size;

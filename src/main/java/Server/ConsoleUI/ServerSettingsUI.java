@@ -2,6 +2,7 @@ package Server.ConsoleUI;
 
 import Game.GameParameters;
 import Server.*;
+import Utility.BoardCreator;
 
 public class ServerSettingsUI extends ConsoleUI {
 
@@ -72,7 +73,7 @@ public class ServerSettingsUI extends ConsoleUI {
 
         int counters = getInt();
 
-        if (counters > 0) {
+        if (counters > 0 && counters <= BoardCreator.howMaxCounters(gameParameters.getNumberFields())) {
             gameParameters.setNumberCounter(counters);
         }
     }
@@ -84,6 +85,10 @@ public class ServerSettingsUI extends ConsoleUI {
 
         if (field > 0) {
             gameParameters.setNumberFields(field);
+
+            if(gameParameters.getNumberCounter() > BoardCreator.howMaxCounters(field)) {
+                gameParameters.setNumberCounter(BoardCreator.howMaxCounters(field));
+            }
         }
     }
 

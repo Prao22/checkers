@@ -11,4 +11,5 @@ public interface GUIService {
     void showInfo(String info);
     void setBoardParameters(int size, int numberOfPlayers, int numberOfCounters);
     void resetClicks();
+    void repack();
 }

@@ -82,13 +82,6 @@ public class InitWindow extends JDialog {
         client.setGameService(controller);
         controller.setSender(client);
 
-        // EventQueue.invokeLater(() ->
-        // {
-//        ClientWindow frame = new ClientWindow(controller);
-//        GUIController guiController = new GUIController(frame);
-//        controller.setGuiController(guiController);
-        // });
-
         GUIController guiController = new GUIController(controller);
         GameWindow window = new GameWindow(guiController);
         guiController.setWindow(window);

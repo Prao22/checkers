@@ -4,8 +4,8 @@ import java.io.Serializable;
 
 public class GameParameters implements Serializable {
     private int numberPlayers = 2;
-    private int numberFields = 4;
-    private int numberCounter = 10;
+    private int numberFields = 1;
+    private int numberCounter = 1;
     private boolean blocks = true;
 
     public void setNumberFields(int numberFields) {

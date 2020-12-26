@@ -2,6 +2,7 @@ package Game.Judge;
 
 import Game.Board;
 import Game.Field;
+import Game.LastMove;
 import Utility.Log;
 
 public class DefaultJudge extends Judge {
@@ -11,7 +12,9 @@ public class DefaultJudge extends Judge {
     }
 
     @Override
-    public boolean checkIfMoveIsValid(Field from, Field to) {
+    public boolean checkIfMoveIsValid(Field from, Field to, int who, LastMove lastMove) {
+        wasJump = false;
+        Log.log("daje false");
         return from != null && to != null && from.hasCounter();
     }
 }

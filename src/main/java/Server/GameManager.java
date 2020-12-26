@@ -73,15 +73,20 @@ public class GameManager implements GameService {
             return;
         }
 
-        if (game.checkIfMoveIsValid(move.getMove())) {
-            game.makeMove(move.getMove());
+        if (game.makeMove(move.getMove(),playerId)) {
             sender.send(new Answer(true), playerId);
             sender.sendToAll(move);
         } else {
             sender.send(new Answer(false), playerId);
         }
 
-        sender.send(new YourTurn(), game.whoseTurn());
+        int winner = game.isWinner();
+
+        if(winner != -1){
+            sender.sendToAll(new Winner(winner));
+        } else {
+            sender.send(new YourTurn(), game.whoseTurn());
+        }
     }
 
 

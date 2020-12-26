@@ -91,7 +91,6 @@ public class Server implements Sender {
                 setEnd(true);
                 Log.log("Wychodze z głównej petli!");
                 break;
-                //trzeba wyjsc bylo disconnect i glosowanie za wyjsciem z gry
             }
 
             for (ClientHandler h : clients.values()) {
@@ -131,7 +130,7 @@ public class Server implements Sender {
 
         switch (message.getCommunicationMessageType()) {
             case INFORMATION: {
-                Log.log(((Information) message).toString());
+                Log.log(message.toString());
                 break;
             }
 
@@ -219,7 +218,6 @@ public class Server implements Sender {
         for (ClientHandler c : clients.values()) {
             c.sendMessage(null);
             c.disconnect();
-            c = null;
         }
 
         clients = null;

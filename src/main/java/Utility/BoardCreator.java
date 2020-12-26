@@ -39,6 +39,10 @@ public class BoardCreator {
         return 3 * size + 1;
     }
 
+    public static int howMaxCounters(int size) {
+        return ((size + 1) * size) / 2;
+    }
+
     public static int[][] cornerA(boolean[][] board, int size, int howManyCounters) {
         int[][] corner = new int[howManyCounters][2];
         int counters = 0;

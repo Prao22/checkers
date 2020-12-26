@@ -2,26 +2,35 @@ package Game;
 
 import Utility.BoardCreator;
 
-import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Board {
 
     protected Field[][] board;
+    protected Map<Integer, List<Counter>> counters;
     protected final int size;
     protected final int rows;
     protected final int cols;
 
-    public Board(int size, int players, int counters) {
+    public Board(int size, int players, int howManyCounters) {
         this.size = size;
         this.rows = 4 * size + 1;
         this.cols = 3 * size + 1;
         board = new Field[rows][cols];
-        fillBoard(players, counters);
+        counters = new HashMap<>(6);
+        fillBoard(players, howManyCounters);
         createRelationBetweenFields();
     }
 
     public Field getField(int row, int col) {
         return board[row][col];
+    }
+
+    public Map<Integer, List<Counter>> getCounters() {
+        return counters;
     }
 
     public void moveCounter(Move move) {
@@ -70,39 +79,80 @@ public class Board {
     }
 
     private void initializeCounters(boolean[][] bBoard, int players, int counters) {
+
+        int[][] cornerA = BoardCreator.cornerA(bBoard, size, counters);
+        int[][] cornerAD = BoardCreator.cornerA(bBoard, size, BoardCreator.howMaxCounters(size));
+        int[][] cornerB = BoardCreator.cornerB(bBoard, size, counters);
+        int[][] cornerBD = BoardCreator.cornerB(bBoard, size, BoardCreator.howMaxCounters(size));
+        int[][] cornerC = BoardCreator.cornerC(bBoard, size, counters);
+        int[][] cornerCD = BoardCreator.cornerC(bBoard, size, BoardCreator.howMaxCounters(size));
+        int[][] cornerD = BoardCreator.cornerD(bBoard, size, counters);
+        int[][] cornerDD = BoardCreator.cornerD(bBoard, size, BoardCreator.howMaxCounters(size));
+        int[][] cornerE = BoardCreator.cornerE(bBoard, size, counters);
+        int[][] cornerED = BoardCreator.cornerE(bBoard, size, BoardCreator.howMaxCounters(size));
+        int[][] cornerF = BoardCreator.cornerF(bBoard, size, counters);
+        int[][] cornerFD = BoardCreator.cornerF(bBoard, size, BoardCreator.howMaxCounters(size));
+
         switch (players) {
             case 2:
-                setCounters(BoardCreator.cornerA(bBoard, size, counters), 1, counters);
-                setCounters(BoardCreator.cornerD(bBoard, size, counters), 2, counters);
+                setCounters(cornerA, 1, counters);
+                setDestination(cornerDD, 1);
+                setCounters(cornerD, 2, counters);
+                setDestination(cornerAD, 2);
                 break;
             case 3:
-                setCounters(BoardCreator.cornerA(bBoard, size, counters), 1, counters);
-                setCounters(BoardCreator.cornerC(bBoard, size, counters), 2, counters);
-                setCounters(BoardCreator.cornerE(bBoard, size, counters), 3, counters);
+                setCounters(cornerA, 1, counters);
+                setDestination(cornerDD, 1);
+                setCounters(cornerC, 2, counters);
+                setDestination(cornerFD, 2);
+                setCounters(cornerE, 3, counters);
+                setDestination(cornerBD, 3);
                 break;
 
             case 4:
-                setCounters(BoardCreator.cornerB(bBoard, size, counters), 1, counters);
-                setCounters(BoardCreator.cornerC(bBoard, size, counters), 2, counters);
-                setCounters(BoardCreator.cornerE(bBoard, size, counters), 3, counters);
-                setCounters(BoardCreator.cornerF(bBoard, size, counters), 4, counters);
+                setCounters(cornerB, 1, counters);
+                setDestination(cornerED, 1);
+                setCounters(cornerC, 2, counters);
+                setDestination(cornerFD, 2);
+                setCounters(cornerE, 3, counters);
+                setDestination(cornerBD, 3);
+                setCounters(cornerF, 4, counters);
+                setDestination(cornerCD, 4);
                 break;
 
             case 6:
-                setCounters(BoardCreator.cornerA(bBoard, size, counters), 1, counters);
-                setCounters(BoardCreator.cornerB(bBoard, size, counters), 2, counters);
-                setCounters(BoardCreator.cornerC(bBoard, size, counters), 3, counters);
-                setCounters(BoardCreator.cornerD(bBoard, size, counters), 4, counters);
-                setCounters(BoardCreator.cornerE(bBoard, size, counters), 5, counters);
-                setCounters(BoardCreator.cornerF(bBoard, size, counters), 6, counters);
+                setCounters(cornerA, 1, counters);
+                setDestination(cornerDD, 1);
+                setCounters(cornerB, 2, counters);
+                setDestination(cornerED, 2);
+                setCounters(cornerC, 3, counters);
+                setDestination(cornerFD, 3);
+                setCounters(cornerD, 4, counters);
+                setDestination(cornerAD, 4);
+                setCounters(cornerE, 5, counters);
+                setDestination(cornerBD, 5);
+                setCounters(cornerF, 6, counters);
+                setDestination(cornerCD, 6);
                 break;
         }
     }
 
     private void setCounters(int[][] corner, int playerId, int numberOfCounters)
     {
+        List<Counter> counterList = new ArrayList<>();
+
         for (int i = 0; i < numberOfCounters; i++) {
-            board[corner[i][0]][corner[i][1]].setCounter(new Counter(playerId));
+            Counter newCounter = new Counter(playerId);
+            counterList.add(newCounter);
+            board[corner[i][0]][corner[i][1]].setCounter(newCounter);
+        }
+
+        counters.put(playerId, counterList);
+    }
+
+    private void setDestination(int[][] corner, int destination) {
+        for (int[] coords : corner) {
+            board[coords[0]][coords[1]].setDestination(destination);
         }
     }
 
@@ -115,7 +165,7 @@ public class Board {
             for(int j = 0; j < cols; j++) {
                 System.out.print(board[i][j] == null ? "*" : "-");
             }
-            System.out.println("");
+            System.out.println(" ");
         }
 
         System.out.println(board[1][2]);

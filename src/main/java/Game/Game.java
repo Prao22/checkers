@@ -12,34 +12,53 @@ public class Game {
     private GameParameters parameters;
     private Turn turns;
     private Judge judge;
+    private LastMove lastMove;
 
     public Game() {
-        players = new HashMap<Integer, Player>(6);
+        players = new HashMap<>(6);
     }
 
     public void init(GameParameters parameters) {
         turns = new Turn(players);
         this.parameters = parameters;
         board = new Board(parameters.getNumberFields(), parameters.getNumberPlayers(), parameters.getNumberCounter());
-
         judge = new DefaultJudge(board);
         judge = new CheckOverlappingCounters(judge);
         judge = new CheckDefaultJump(judge);
         judge = new CheckDefaultMove(judge);
     }
 
-    public boolean checkIfMoveIsValid(Move move) {
+    public boolean makeMove(Move move, int who) {
+
+        if (move == null) {
+            lastMove = null;
+            turns.nextTurn();
+            return true;
+        }
+
         Field from = board.getField(move.getFrom()[Move.ROW], move.getFrom()[Move.COLUMN]);
         Field to = board.getField(move.getTo()[Move.ROW], move.getTo()[Move.COLUMN]);
 
-        return judge.checkIfMoveIsValid(from, to);
+        if (judge.checkIfMoveIsValid(from, to, who, lastMove)) {
+
+            board.moveCounter(move);
+
+            boolean jump = judge.isWasJump();
+            lastMove = new LastMove(from, to, who, jump);
+
+            if(!jump) {
+                lastMove = null;
+                turns.nextTurn();
+            }
+
+            return true;
+        } else {
+            return false;
+        }
     }
 
-    public void makeMove(Move move) {
-        board.moveCounter(move);
-        //sprawdzenie czy byl skok
-        //przesuniecie tury albo i nie
-        turns.nextTurn();
+    public int isWinner() {
+        return judge.getWinner();
     }
 
     public int whoseTurn() {

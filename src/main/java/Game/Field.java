@@ -5,10 +5,11 @@ import java.util.Arrays;
 public class Field {
     public static final int MAX_NEIGHBOURS = 6;
 
-    protected Counter counter = null;
-    protected Field[] neighbours = null;
     protected final int row;
     protected final int col;
+    protected int destination = -1;
+    protected Counter counter = null;
+    protected Field[] neighbours = null;
 
     Field(int row, int col) {
         this.row = row;
@@ -18,7 +19,6 @@ public class Field {
     public int getRow() {
         return row;
     }
-
     public int getCol() {
         return col;
     }
@@ -30,7 +30,18 @@ public class Field {
         return counter;
     }
     public void setCounter(Counter counter) {
+        if(counter != null) {
+            counter.setCurrentField(this);
+        }
+
         this.counter = counter;
+    }
+    public void setDestination(int destination) {
+        this.destination = destination;
+    }
+
+    public int getDestination() {
+        return destination;
     }
 
     public void setNeighbours(Field[] neighbours) {

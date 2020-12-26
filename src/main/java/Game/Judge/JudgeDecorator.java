@@ -1,6 +1,7 @@
 package Game.Judge;
 
 import Game.Field;
+import Game.LastMove;
 
 public abstract class JudgeDecorator extends Judge {
     protected final Judge decoratedJudge;
@@ -10,7 +11,7 @@ public abstract class JudgeDecorator extends Judge {
         this.decoratedJudge = decoratedJudge;
     }
 
-    public boolean checkIfMoveIsValid(Field from, Field to) {
-        return decoratedJudge.checkIfMoveIsValid(from, to);
+    public boolean checkIfMoveIsValid(Field from, Field to, int who, LastMove lastMove) {
+        return decoratedJudge.checkIfMoveIsValid(from, to, who, lastMove);
     }
 }

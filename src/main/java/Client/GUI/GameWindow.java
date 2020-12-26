@@ -1,5 +1,7 @@
 package Client.GUI;
 
+import Client.Controller;
+import Client.GUIController;
 import Client.GUIObserver;
 
 import java.awt.*;
@@ -19,16 +21,22 @@ public class GameWindow extends JFrame implements WindowListener {
     public GameWindow(GUIObserver observer) {
         setTitle(GAME_NAME);
         title = new TitleLabel(GAME_NAME);
-        footer = new Footer();
+        footer = new Footer(observer);
         this.observer = observer;
 
         this.getContentPane().setLayout(new BorderLayout());
         this.getContentPane().add(title, BorderLayout.NORTH);
         this.getContentPane().add(footer, BorderLayout.SOUTH);
 
-        setResizable(false);
+        setResizable(true);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+
+    public static void main(String[] args) {
+        GameWindow a =new GameWindow(new GUIController(new Controller()));
+        a.setVisible(true);
+        a.setBoardParameters(4, 4, 10);
     }
 
     public void updateFooter(int onlinePlayers, int maxPlayers, String text) {
@@ -49,11 +57,10 @@ public class GameWindow extends JFrame implements WindowListener {
 
 
     public void setBoardParameters(int sizeOfBoard, int players, int counters) {
-        //this.getContentPane().remove(board);
         this.board = new Board(sizeOfBoard, players, counters, observer);
         getContentPane().add(this.board, BorderLayout.CENTER);
-        pack();
         setVisible(true);
+        pack();
     }
 
     @Override

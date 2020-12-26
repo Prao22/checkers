@@ -1,6 +1,7 @@
 package Game.Judge;
 
 import Game.Field;
+import Game.LastMove;
 import Utility.Log;
 
 import static java.lang.Math.abs;
@@ -11,9 +12,10 @@ public class CheckDefaultMove extends JudgeDecorator {
     }
 
     @Override
-    public boolean checkIfMoveIsValid(Field from, Field to) {
-        boolean ch = super.checkIfMoveIsValid(from, to);
-
+    public boolean checkIfMoveIsValid(Field from, Field to, int who, LastMove lastMove) {
+        Log.log("move");
+        boolean ch = super.checkIfMoveIsValid(from, to, who, lastMove);
+        Log.log("move");
         if (!ch) {
             return false;
         }
@@ -22,10 +24,16 @@ public class CheckDefaultMove extends JudgeDecorator {
         int colDiff = to.getCol() - from.getCol();
 
         if (to.isNeighbour(from)) {
-            return true;
+            return lastMove == null || !lastMove.wasJump() || lastMove.getWho() != who;
         }
 
         Field buff;
+        Log.log("daje true JEST SKOK");
+        wasJump = true;
+
+        if (lastMove != null && lastMove.getWho() == who && from.getCounter() != lastMove.getTo().getCounter()) {
+            return false;
+        }
 
         if (rowDiff != 0) {
             buff = board.getField(from.getRow() + rowDiff / 2, from.getCol() + (colDiff + (from.getRow() % 2 == 1 ? 1 : -1)) / 2);

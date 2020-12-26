@@ -70,24 +70,30 @@ public class GUIController implements GUIService, GUIObserver {
 
     @Override
     public void resetClicks() {
-        firstClick = null;
+        if(firstClick != null) {
+            observedBoard.normalField(firstClick[0], firstClick[1]);
+            firstClick = null;
+        }
+
         secondClick = false;
+    }
+
+    @Override
+    public void repack() {
+        mainWindow.pack();
     }
 
     @Override
     public void clickNotify(int row, int col) {
 
-        if(!observedBoard.getColorOfField(row, col).equals(gameController.getColor().getJavaColor()) && !secondClick)
-        {
+        if (!observedBoard.getColorOfField(row, col).equals(gameController.getColor().getJavaColor()) && !secondClick) {
             return;
         }
 
 
         if (secondClick) {
             gameController.setMove(new Game.Move(firstClick, new int[]{row, col}));
-            secondClick = false;
-            observedBoard.normalField(firstClick[0], firstClick[1]);
-            firstClick = null;
+            resetClicks();
         } else {
             firstClick = new int[]{row, col};
             secondClick = true;
@@ -102,6 +108,11 @@ public class GUIController implements GUIService, GUIObserver {
 
     @Override
     public void close() {
+        gameController.close();
+    }
 
+    @Override
+    public void buttonClicked() {
+        gameController.setMove(null);
     }
 }

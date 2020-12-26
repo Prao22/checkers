@@ -12,6 +12,7 @@ public class Controller implements GameService, GameController {
     private GUIController guiController;
     private int myPlayerId;
     private boolean myTurn = false;
+    private boolean end = false;
 
     public Controller() {
 
@@ -55,6 +56,12 @@ public class Controller implements GameService, GameController {
                 Log.log("Jest głosowanie o pytaniu: " + ((Voting) message).getQuestion() );
                 boolean answer = guiController.showQuestion(((Voting) message).getQuestion());
                 sender.send(new Answer(answer));
+                break;
+            }
+
+            case WINNER: {
+                winnerHandler((Winner) message);
+                break;
             }
 
         }
@@ -62,7 +69,10 @@ public class Controller implements GameService, GameController {
 
     private void moveHandler(Communication.Move move) {
         Log.log("Jest ruch " + move.toString());
-        guiController.makeMove(move.getMove());
+
+        if(move.getMove() != null) {
+            guiController.makeMove(move.getMove());
+        }
     }
     private void answerHandler(Answer answer) {
         Log.log("Odpowiedz serwera: " + answer.getAnswer());
@@ -79,8 +89,8 @@ public class Controller implements GameService, GameController {
     private void parametersHandler(Parameters mParameters) {
         parameters = mParameters.getParameters();
         Log.log("Otrzymałem parametry: " + parameters.toString());
-        guiController.setBoardParameters(parameters.getNumberFields(), parameters.getNumberPlayers(), parameters.getNumberCounter());
         guiController.updateFooter(parameters.getNumberPlayers(), parameters.getNumberPlayers(), null);
+        guiController.setBoardParameters(parameters.getNumberFields(), parameters.getNumberPlayers(), parameters.getNumberCounter());
         guiController.showInfo("Zasady gry: \nLiczba graczy: " + parameters.getNumberPlayers() +
                 "\nLiczba pionkow: " + parameters.getNumberCounter() +
                 "\nRozmiar planszy: " + parameters.getNumberFields() +
@@ -98,6 +108,15 @@ public class Controller implements GameService, GameController {
         guiController.showInfo("Otrzymałeś id = " + myPlayerId + " i kolor " + CounterColor.getFromNumber(myPlayerId));
         guiController.updatePlayerInfo(myPlayerId);
         guiController.updateTurnInfo(false);
+        guiController.repack();
+    }
+    private void winnerHandler(Winner winner) {
+        if(winner.getWinner() == myPlayerId) {
+            guiController.showInfo("Gratulacje!\nWygrales!");
+        } else {
+            guiController.showInfo("Gracz z kolorem " + CounterColor.getFromNumber(winner.getWinner()) + " wygrał!");
+        }
+        end = true;
     }
 
     @Override
@@ -113,6 +132,10 @@ public class Controller implements GameService, GameController {
 
     @Override
     public void setMove(Game.Move move) {
+        if(end) {
+            return;
+        }
+
         if(myTurn) {
             myTurn = false;
             sender.send(new Communication.Move(move));

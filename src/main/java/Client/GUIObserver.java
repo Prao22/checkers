@@ -1,5 +1,5 @@
 package Client;
 
-public interface GUIObserver extends BoardObserver {
+public interface GUIObserver extends BoardObserver, ButtonObserver {
     void close();
 }
