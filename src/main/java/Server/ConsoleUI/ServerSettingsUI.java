@@ -73,7 +73,7 @@ public class ServerSettingsUI extends ConsoleUI {
 
         int counters = getInt();
 
-        if (counters > 0 && counters <= BoardCreator.howMaxCounters(gameParameters.getNumberFields())) {
+        if (counters > 0 && counters <= BoardCreator.maxCounters(gameParameters.getNumberFields())) {
             gameParameters.setNumberCounter(counters);
         }
     }
@@ -86,8 +86,8 @@ public class ServerSettingsUI extends ConsoleUI {
         if (field > 0) {
             gameParameters.setNumberFields(field);
 
-            if(gameParameters.getNumberCounter() > BoardCreator.howMaxCounters(field)) {
-                gameParameters.setNumberCounter(BoardCreator.howMaxCounters(field));
+            if(gameParameters.getNumberCounter() > BoardCreator.maxCounters(field)) {
+                gameParameters.setNumberCounter(BoardCreator.maxCounters(field));
             }
         }
     }

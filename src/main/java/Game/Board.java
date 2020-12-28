@@ -40,8 +40,10 @@ public class Board {
         Field from = board[fromCoordinates[Move.ROW]][fromCoordinates[Move.COLUMN]];
         Field to = board[toCoordinates[Move.ROW]][toCoordinates[Move.COLUMN]];
 
+        Counter toCounter = to.getCounter();
+
         to.setCounter(from.getCounter());
-        from.setCounter(null);
+        from.setCounter(toCounter);
     }
 
     private void fillBoard(int players, int counters) {
@@ -81,17 +83,17 @@ public class Board {
     private void initializeCounters(boolean[][] bBoard, int players, int counters) {
 
         int[][] cornerA = BoardCreator.cornerA(bBoard, size, counters);
-        int[][] cornerAD = BoardCreator.cornerA(bBoard, size, BoardCreator.howMaxCounters(size));
+        int[][] cornerAD = BoardCreator.cornerA(bBoard, size, BoardCreator.maxCounters(size));
         int[][] cornerB = BoardCreator.cornerB(bBoard, size, counters);
-        int[][] cornerBD = BoardCreator.cornerB(bBoard, size, BoardCreator.howMaxCounters(size));
+        int[][] cornerBD = BoardCreator.cornerB(bBoard, size, BoardCreator.maxCounters(size));
         int[][] cornerC = BoardCreator.cornerC(bBoard, size, counters);
-        int[][] cornerCD = BoardCreator.cornerC(bBoard, size, BoardCreator.howMaxCounters(size));
+        int[][] cornerCD = BoardCreator.cornerC(bBoard, size, BoardCreator.maxCounters(size));
         int[][] cornerD = BoardCreator.cornerD(bBoard, size, counters);
-        int[][] cornerDD = BoardCreator.cornerD(bBoard, size, BoardCreator.howMaxCounters(size));
+        int[][] cornerDD = BoardCreator.cornerD(bBoard, size, BoardCreator.maxCounters(size));
         int[][] cornerE = BoardCreator.cornerE(bBoard, size, counters);
-        int[][] cornerED = BoardCreator.cornerE(bBoard, size, BoardCreator.howMaxCounters(size));
+        int[][] cornerED = BoardCreator.cornerE(bBoard, size, BoardCreator.maxCounters(size));
         int[][] cornerF = BoardCreator.cornerF(bBoard, size, counters);
-        int[][] cornerFD = BoardCreator.cornerF(bBoard, size, BoardCreator.howMaxCounters(size));
+        int[][] cornerFD = BoardCreator.cornerF(bBoard, size, BoardCreator.maxCounters(size));
 
         switch (players) {
             case 2:

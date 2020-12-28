@@ -1,29 +1,39 @@
 package Server;
 
-
 import Communication.*;
 import Game.Game;
-import Game.Player;
 import Game.GameParameters;
 import Utility.Log;
 
-import java.util.*;
-
+/**
+ * Klasa obsługująca odebrane wiadomości które dotyczą gry.
+ */
 public class GameManager implements GameService {
 
-    private Sender sender;
-    private GameParameters gameParameters;
-    private Game game;
+    /**
+     * Umożliwia wysyłanie wiadomości do graczy.
+     */
+    private final Sender sender;
+
+    /**
+     * Parametry aktualnej rozgrywki.
+     */
+    private final GameParameters gameParameters;
+
+    /**
+     * Obsługa logicznej części gry.
+     */
+    private final Game game;
 
 
-    public GameManager(Sender sender, GameParameters gameParameters) {
+    public GameManager(Sender sender, GameParameters gameParameters, Game game) {
         this.sender = sender;
         this.gameParameters = gameParameters;
-        game = new Game();
+        this.game = game;
     }
 
     @Override
-    public int serviceMessage(GameMessage message, int playerId) {
+    public void serviceMessage(GameMessage message, int playerId) {
 
         switch (message.getGameMessageType()) {
 
@@ -39,7 +49,6 @@ public class GameManager implements GameService {
             }
         }
 
-        return 0;
     }
 
     @Override
@@ -69,11 +78,11 @@ public class GameManager implements GameService {
     }
 
     private void moveHandler(Communication.Move move, int playerId) {
-        if(playerId != game.whoseTurn()) {
+        if (playerId != game.whoseTurn()) {
             return;
         }
 
-        if (game.makeMove(move.getMove(),playerId)) {
+        if (game.makeMove(move.getMove(), playerId)) {
             sender.send(new Answer(true), playerId);
             sender.sendToAll(move);
         } else {
@@ -82,19 +91,10 @@ public class GameManager implements GameService {
 
         int winner = game.isWinner();
 
-        if(winner != -1){
+        if (winner != -1) {
             sender.sendToAll(new Winner(winner));
         } else {
             sender.send(new YourTurn(), game.whoseTurn());
         }
-    }
-
-
-    public void setSender(Sender sender) {
-        this.sender = sender;
-    }
-
-    public void setGameParameters(GameParameters gameParameters) {
-        this.gameParameters = gameParameters;
     }
 }

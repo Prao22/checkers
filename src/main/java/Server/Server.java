@@ -9,17 +9,62 @@ import Utility.Log;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.*;
+import Game.Game;
 
+/**
+ * Klasa serwera komunikującego się z graczami.
+ * Odebrane wiadomości nie dotyczące komunikacji rozdziela
+ * do odpowiednich klas.
+ */
 public class Server implements Sender {
 
+    /**
+     * Port pod jakim serwer będzie działał.
+     */
     private int port = 59001;
+
+    /**
+     * Ile aktualnie jest połączonych graczy.
+     */
     private int onlineClients = 0;
+
+    /**
+     * Socket do odbierania chcących się połączyć klinetów.
+     */
     private ServerSocket serverSocket;
+
+    /**
+     * Mapa połączonych klientów.
+     * Klucz to identyfikator klienta,
+     * a wartość to obiekt odbierający
+     * wiadomości od niego.
+     */
     private Map<Integer, ClientHandler> clients;
+
+    /**
+     * Parametry gry którą serwer będzie obsługiwał.
+     */
     private final GameParameters gameParameters;
+
+    /**
+     * Klasa która obsługuje wiadomości dotyczące gry.
+     */
     private GameService gameService;
+
+    /**
+     * Czy serwer jest dostępny.
+     */
     private boolean running = false;
+
+    /**
+     * Czy serwer kończy swoją prace.
+     */
     private boolean end = false;
+
+    /**
+     * Lock potrzebny do komunikacji z wątkami które nasłuchują
+     * na wiadomości od klientów.
+     */
     private final Object lock = new Object();
 
     public Server() {
@@ -29,7 +74,7 @@ public class Server implements Sender {
 
     public static void main(String[] args) {
         Server server = new Server();
-        server.setGameService(new GameManager(server, server.getGameParameters()));
+        server.setGameService(new GameManager(server, server.getGameParameters(), new Game()));
 
         ServerConsoleUI ui = new ServerConsoleUI(server, server.getLock());
         Thread uiThread = new Thread(ui);
@@ -38,6 +83,12 @@ public class Server implements Sender {
         server.run();
     }
 
+    /**
+     * Oczekiwanie na podłączenie się wymaganej przez
+     * parametry gry liczby graczy.
+     *
+     * @throws IOException rzucany jeśli połącznie zawiodło.
+     */
     public void waitForPlayers() throws IOException {
         while (onlineClients < gameParameters.getNumberPlayers()) {
             addClient();
@@ -47,6 +98,12 @@ public class Server implements Sender {
         Log.log("Wszyscy dołączyli.");
     }
 
+    /**
+     * Dodaje oczkującego gracza i tworzy nasłuchujący go wątek.
+     * Wysyła nowemu graczowi informacje o rozgrywce.
+     *
+     * @throws IOException rzucany jeśli połączenie zawiodło.
+     */
     private void addClient() throws IOException {
         clients.put(onlineClients + 1, new ClientHandler(onlineClients + 1,
                 new ConnectionService(serverSocket.accept()), lock));
@@ -58,6 +115,9 @@ public class Server implements Sender {
         Log.log("Dołączył gracz.");
     }
 
+    /**
+     * Funkcja przygotowuje się do startu serwera i rozpoczęcia gry.
+     */
     public void run() {
         if (waitForStart() != 0) {
             Log.err("Błąd podczas czekania - przerwanie");
@@ -71,18 +131,21 @@ public class Server implements Sender {
             return;
         }
 
-        int returnValue = mainLoop();
+        mainLoop();
     }
 
-    private int mainLoop() {
+    /**
+     * Główna pętla serwera, działająca podczas gry.
+     */
+    private void mainLoop() {
 
-        for(ClientHandler c : clients.values()) {
+        for (ClientHandler c : clients.values()) {
             c.sendMessage(new Start(c.getClientId()));
         }
 
         gameService.start();
 
-        while (!isEnd() && isRunning() && onlineClients > 0 ) {
+        while (!isEnd() && isRunning() && onlineClients > 0) {
 
             Log.log("Klinetow: " + onlineClients);
             waitForEvent();
@@ -101,9 +164,12 @@ public class Server implements Sender {
             }
         }
 
-        return 0;
     }
 
+    /**
+     * Czeka sekunde na powiadomienie.
+     * Jeśli nic się nie dzieje sam wznawia prace.
+     */
     private void waitForEvent() {
         try {
             synchronized (lock) {
@@ -114,6 +180,13 @@ public class Server implements Sender {
         }
     }
 
+    /**
+     * Rozpoznaje typ wiadomości i oddelegowuje jej obsługę
+     * odpowiednim klasom.
+     *
+     * @param message odebrana wiadomość
+     * @param who     nadawca wiadomości
+     */
     public void serviceMessage(Message message, int who) {
 
         if (message.getType() == MessageType.COMMUNICATION) {
@@ -126,6 +199,12 @@ public class Server implements Sender {
         }
     }
 
+    /**
+     * Obsługa wiadomości dotyczących komunikacji między klientem a serwerem.
+     *
+     * @param message odebrana wiadomość
+     * @param who     kto wysłał wiadomość
+     */
     public void serviceCommunicationMessage(CommunicationMessage message, int who) {
 
         switch (message.getCommunicationMessageType()) {
@@ -142,12 +221,23 @@ public class Server implements Sender {
         }
     }
 
+    /**
+     * Rozłącza się z podanym graczem.
+     *
+     * @param clientId identyfikator gracza z którym chcemy się rozłączyć
+     */
     public void disconnectWith(int clientId) {
         clients.remove(clientId);
         onlineClients--;
         gameService.removePlayer(clientId);
     }
 
+    /**
+     * Obsługuje rozłączenie gracza.
+     *
+     * @param clientId gracz który się rozłączył
+     * @return czy dostępny jest choć jeden gracz
+     */
     public boolean handleDisconnection(int clientId) {
         disconnectWith(clientId);
         sendToAll(new Disconnection(clientId));
@@ -155,6 +245,12 @@ public class Server implements Sender {
         return onlineClients == 0;//resultOfVoting;
     }
 
+    /**
+     * Sprawdza czy któryś z klientów się rozłączył.
+     * Jeśli tak rozpoczyna obsługę tego rozłączenia.
+     *
+     * @return czy dostępny jest choć jeden gracz.
+     */
     public boolean checkDisconnection() {
         //noinspection ForLoopReplaceableByForEach
         for (Iterator<ClientHandler> it = clients.values().iterator(); it.hasNext(); ) {
@@ -186,6 +282,12 @@ public class Server implements Sender {
     }
 
 
+    /**
+     * Oczekiwanie na znak do startu.
+     *
+     * @return 0 jeśli normalny start
+     * < 0 jeśli zakończyć prace
+     */
     private int waitForStart() {
         while (!isRunning()) {
             try {
@@ -205,6 +307,13 @@ public class Server implements Sender {
         return 0;
     }
 
+    /**
+     * Zmiana stanu serwra.
+     * Z włączonego na wyłączony lub na odwrót.
+     *
+     * @return true jeśli nie było błędów
+     * false jeśli wystąpił jakiś błąd
+     */
     public boolean changeState() {
 
         if (isRunning()) {
@@ -214,6 +323,12 @@ public class Server implements Sender {
         }
     }
 
+    /**
+     * Rozłączenie z klientami i zamknięcie wszystkich socketów.
+     *
+     * @return true jeśli wszystko w porządku
+     * false jeśli wystąpił jakiś błąd przy rozłączaniu
+     */
     public boolean turnOff() {
         for (ClientHandler c : clients.values()) {
             c.sendMessage(null);
@@ -234,6 +349,12 @@ public class Server implements Sender {
     }
 
 
+    /**
+     * Otwiera socket który umożliwia łączenie się klientów z serwerem.
+     *
+     * @return true jeśli nie było błędów
+     * false jeśli wystąpił jakiś błąd
+     */
     public boolean turnOn() {
         try {
             serverSocket = new ServerSocket(port);

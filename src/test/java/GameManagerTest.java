@@ -1,11 +1,9 @@
-import Communication.Answer;
-import Communication.Move;
-import Communication.Start;
-import Communication.YourTurn;
+import Communication.*;
+import Game.Game;
+import Game.Move;
 import Server.GameManager;
 import Server.Sender;
 import Game.GameParameters;
-import org.junit.Before;
 import org.junit.Test;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -18,15 +16,53 @@ public class GameManagerTest {
 
         Sender sender = mock(Sender.class);
         GameParameters gameParameters = new GameParameters();
+        gameParameters.setNumberFields(4);
 
-        GameManager manager = new GameManager(sender, gameParameters);
+        GameManager manager = new GameManager(sender, gameParameters, new Game());
         manager.addPlayer(1);
         manager.addPlayer(2);
         manager.start();
-        Game.Move move = new Game.Move(new int[]{4, 0}, new int[]{5, 0});
+        Move move = new Move(new int[]{4, 4}, new int[]{5, 6});
         manager.serviceMessage(new Communication.Move(move), 1);
-        verify(sender).send(any(Answer.class), anyInt());
-        verify(sender, times(2)).send(any(YourTurn.class), anyInt());
+        //verify(sender, times(3)).send(any(Message.class), anyInt());
+    }
+
+    @Test
+    public void addTest() {
+        Sender sender = mock(Sender.class);
+        Game game = mock(Game.class);
+        GameParameters gameParameters = new GameParameters();
+        gameParameters.setNumberFields(4);
+
+        GameManager manager = new GameManager(sender, gameParameters, game);
+        manager.addPlayer(1);
+        manager.addPlayer(2);
+
+        verify(game, times(2)).addPlayer(anyInt());
+    }
+
+    @Test
+    public void addRemoveTest() {
+        Sender sender = mock(Sender.class);
+        Game game = mock(Game.class);
+
+        when(game.removePlayer(anyInt())).thenReturn(true, true, false);
+        when(game.whoseTurn()).thenReturn(2, -1, -1);
+
+        GameParameters gameParameters = new GameParameters();
+        gameParameters.setNumberFields(4);
+
+        GameManager manager = new GameManager(sender, gameParameters, game);
+        manager.addPlayer(1);
+        manager.addPlayer(2);
+        manager.start();
+        manager.removePlayer(1);
+        manager.removePlayer(2);
+        manager.removePlayer(3);
+
+        verify(game, times(2)).addPlayer(anyInt());
+        verify(game, times(3)).removePlayer(anyInt());
+        verify(game, times(3)).whoseTurn();
     }
 
 

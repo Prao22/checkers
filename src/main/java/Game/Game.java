@@ -1,6 +1,7 @@
 package Game;
 
 import Game.Judge.*;
+import Utility.BoardCreator;
 import Utility.Log;
 
 import java.util.HashMap;
@@ -46,7 +47,7 @@ public class Game {
             boolean jump = judge.isWasJump();
             lastMove = new LastMove(from, to, who, jump);
 
-            if(!jump) {
+            if (!jump) {
                 lastMove = null;
                 turns.nextTurn();
             }

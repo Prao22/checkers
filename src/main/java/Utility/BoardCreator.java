@@ -39,7 +39,7 @@ public class BoardCreator {
         return 3 * size + 1;
     }
 
-    public static int howMaxCounters(int size) {
+    public static int maxCounters(int size) {
         return ((size + 1) * size) / 2;
     }
 
