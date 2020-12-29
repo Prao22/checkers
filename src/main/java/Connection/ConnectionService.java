@@ -3,10 +3,20 @@ package Connection;
 import java.io.*;
 import java.net.Socket;
 
+/**
+ * Obsługuje połączenie z klientem/serwerem połączonym
+ * za pomocą socketa.
+ */
 public class ConnectionService implements IConnectionService {
 
+    /**
+     * Socket dzięki któremu jesteśmy połączeni z drugą stroną.
+     */
     protected Socket socket;
 
+    /**
+     * Strumienie potrzebne do odbierania i wysyłania obiektów.
+     */
     protected InputStream in;
     protected OutputStream out;
     protected ObjectOutputStream outObjects;
@@ -21,6 +31,12 @@ public class ConnectionService implements IConnectionService {
         inObjects = new ObjectInputStream(in);
     }
 
+    /**
+     * Wysłanie obiektu do połączonego z nami socketu.
+     *
+     * @param object obiekt który chcemy wysłać.
+     * @return czy wysyłka się powiodła
+     */
     @Override
     public boolean sendObject(Object object) {
         try {
@@ -34,6 +50,13 @@ public class ConnectionService implements IConnectionService {
         return true;
     }
 
+    /**
+     * Odbiór obiektu wysłanego przez połączonego
+     * z nami socketa. Gdy nie ma żadnego obieku w buforze
+     * funkcja blokuje wątek dopóki żaden się nie pojawi.
+     *
+     * @return obiekt który został wysłany
+     */
     @Override
     public Object receiveObject() {
         try {
@@ -43,6 +66,10 @@ public class ConnectionService implements IConnectionService {
         }
     }
 
+    /**
+     * Zamyka połączenie z połączonym z nami socketem.
+     */
+    @Override
     public void closeConnection() {
         try {
             inObjects.close();

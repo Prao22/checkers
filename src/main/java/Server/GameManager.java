@@ -32,6 +32,11 @@ public class GameManager implements GameService {
         this.game = game;
     }
 
+    /**
+     * Obsługa wiadomości dotyczącej gry.
+     * @param message otrzymana wiadomość.
+     * @param playerId gracz który ją wysłał
+     */
     @Override
     public void serviceMessage(GameMessage message, int playerId) {
 
@@ -51,11 +56,19 @@ public class GameManager implements GameService {
 
     }
 
+    /**
+     * Dodaje gracza do rozgrywki.
+     * @param playerId numer gracza
+     */
     @Override
     public void addPlayer(int playerId) {
         game.addPlayer(playerId);
     }
 
+    /**
+     * Usuwa gracza z rozgrywki.
+     * @param playerId numer gracza
+     */
     @Override
     public void removePlayer(int playerId) {
         if (game.removePlayer(playerId)) {
@@ -64,6 +77,9 @@ public class GameManager implements GameService {
 
     }
 
+    /**
+     * Inicjalizuje gre.
+     */
     @Override
     public void start() {
         game.init(gameParameters);
@@ -71,12 +87,24 @@ public class GameManager implements GameService {
         sender.send(new YourTurn(), whoseTurn);
     }
 
+    /**
+     * Obsługa informacji dotyczących gry.
+     * Używane podczas testowania.
+     * @param information przesłana informacja
+     * @param playerId nadawca informacja
+     */
     private void informationHandler(GameInformation information, int playerId) {
         Log.log("Otrzymalem wiadomosc: \"" + information.getMessage() + "\" od gracza nr " + playerId);
         sender.sendToAll(new GameInformation("Mam nowa wiadomosc od kogos z was"));
         sender.send(new GameInformation("Odebralem od ciebie wiadomosc " + information.getMessage()), playerId);
     }
 
+
+    /**
+     * Obsługa odbieranych ruchów
+     * @param move ruch w grze
+     * @param playerId gracz wykonujący ruch
+     */
     private void moveHandler(Communication.Move move, int playerId) {
         if (playerId != game.whoseTurn()) {
             return;

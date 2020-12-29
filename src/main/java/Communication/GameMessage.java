@@ -1,8 +1,14 @@
 package Communication;
 
+/**
+ * Wiadomość dotycząca gry.
+ */
 public abstract class GameMessage extends Message {
 
-    private GameMessageType gameMessageType;
+    /**
+     * Szczegółowa informacja czego dotyczy wiadomość.
+     */
+    private final GameMessageType gameMessageType;
 
     GameMessage(GameMessageType gameMessageType) {
         super(MessageType.GAME);

@@ -9,10 +9,30 @@ import Utility.Log;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+/**
+ * Wątek do obsługi klienta/gracza.
+ * Jako wątek czeka na wiadomość od klienta i
+ * jeśli coś się pojawi to powiadamia przez lock
+ * zainteresowanego.
+ */
 public class ClientHandler extends Handler {
 
+    /**
+     * Id gracza którego klasa obsługuje
+     */
     private final int clientId;
+
+    /**
+     * Kolejka odebranych wiadomości.
+     * Każdą wiadomość która obiekt odbierze
+     * kolejkuje.
+     */
     private final Queue<Message> receive;
+
+    /**
+     * Obiekt który służy do powiadamiania serwera
+     * o oczekujących wiadomościach.
+     */
     private final Object lock;
 
 
@@ -24,6 +44,11 @@ public class ClientHandler extends Handler {
     }
 
 
+    /**
+     * Nasłuchiwanie wiadomości od obsługiwanego klienta.
+     * Jeśli klient się rozłączy wątek kończy prace.
+     * Po odebraniu wiadomości klasa kolejkuje ją i powiadamia serwer.
+     */
     @Override
     public void run() {
 
@@ -50,24 +75,46 @@ public class ClientHandler extends Handler {
         }
     }
 
+    /**
+     * Powiadamianie serwera przez lock'a.
+     */
     private void notifyServer() {
         synchronized (lock) {
             lock.notify();
         }
     }
 
+    /**
+     * Pobierz następną skolejkowaną wiadomość.
+     *
+     * @return najdłużej czekająca wiadomość lub null jeśli nic nie ma.
+     */
     public Message getNextMessage() {
         return receive.poll();
     }
 
+    /**
+     * Sprawdza czy są jakieś oczekujące wiadomości.
+     *
+     * @return czy są jakieś oczekujące wiadomości.
+     */
     public boolean isAnyMessage() {
         return !receive.isEmpty();
     }
 
+    /**
+     * Zwraca id klienta którego klasa obsługuje.
+     *
+     * @return id klienta którego klasa obsługuje.
+     */
     public int getClientId() {
         return clientId;
     }
 
+    /**
+     * Rozłącza się z klientem wysyłając mu informacje o tym.
+     */
+    @Override
     public void disconnect() {
         isEnd = true;
         connectionService.sendObject(new End());

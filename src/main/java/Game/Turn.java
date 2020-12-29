@@ -5,7 +5,7 @@ import java.util.*;
 public class Turn {
 
     private int currentPlayer;
-    private Map<Integer, Player> players;
+    private final Map<Integer, Player> players;
 
     public Turn(Map<Integer, Player> players) {
         this.players = players;
@@ -15,6 +15,7 @@ public class Turn {
     public int nextTurn() {
 
         if(players.size() == 0) {
+            currentPlayer = -1;
             return -1;
         }
 

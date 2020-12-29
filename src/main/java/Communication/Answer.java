@@ -1,5 +1,9 @@
 package Communication;
 
+/**
+ * Odpowiedź od serwera czy wysłany wcześniej
+ * ruch jest poprawny.
+ */
 public class Answer extends GameMessage {
 
     private final boolean answer;

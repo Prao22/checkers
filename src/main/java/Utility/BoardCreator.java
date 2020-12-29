@@ -14,7 +14,7 @@ public class BoardCreator {
         boolean[][] board = new boolean[rows][cols];
 
         for (int row = 0; row < size; row++) {
-            fillPeak(row, cols, row, board);
+            fillCorner(row, cols, row, board);
         }
 
         for (int row = size, k = 0; row < 2 * size; row++, k++) {
@@ -28,7 +28,7 @@ public class BoardCreator {
         }
 
         for (int row = 3 * size + 1, k = size - 1; row < rows; row++, k--) {
-            fillPeak(row, cols, k, board);
+            fillCorner(row, cols, k, board);
         }
 
         return board;
@@ -218,157 +218,7 @@ public class BoardCreator {
         return F;
     }
 
-
-//    public static int[][] cornerA(boolean[][] board, int size, int howManyCounters) {
-//        int[][] corner = new int[howManyCounters][2];
-//        int counters = 0;
-//
-//
-//        for (int i = 0; i < size; i++) {
-//            for (int j = size - 1; j < 2 * size + 1; j++) {
-//
-//                if (board[i][j]) {
-//                    corner[counters][0] = i;
-//                    corner[counters][1] = j;
-//                    counters++;
-//                }
-//
-//                if (counters == howManyCounters) {
-//                    return corner;
-//                }
-//            }
-//        }
-//
-//        return corner;
-//    }
-//
-//    public static int[][] cornerB(boolean[][] board, int size, int howManyCounters) {
-//        int[][] corner = new int[howManyCounters][2];
-//        int counters = 0;
-//        int counter;
-//
-//        for (int i = size; i < 2 * size; i++) {
-//            counter = size - i % size;
-//            for (int j = 0; j < size && counter != 0; j++) {
-//                if (board[i][j]) {
-//                    corner[counters][0] = i;
-//                    corner[counters][1] = j;
-//                    counters++;
-//                    counter--;
-//                }
-//
-//                if (counters == howManyCounters) {
-//                    return corner;
-//                }
-//            }
-//        }
-//
-//        return corner;
-//    }
-//
-//    public static int[][] cornerC(boolean[][] board, int size, int howManyCounters) {
-//        int[][] corner = new int[howManyCounters][2];
-//        int counters = 0;
-//
-//        int counter;
-//        int set = 0;
-//
-//        for (int i = 2 * size + 1; i < 3 * size + 1; i++) {
-//            set++;
-//            counter = set;
-//
-//            for (int j = 0; j < size && counter != 0; j++) {
-//                if (board[i][j]) {
-//                    corner[counters][0] = i;
-//                    corner[counters][1] = j;
-//                    counters++;
-//                    counter--;
-//                }
-//
-//                if (counters == howManyCounters) {
-//                    return corner;
-//                }
-//            }
-//        }
-//
-//        return corner;
-//    }
-//
-//    public static int[][] cornerD(boolean[][] board, int size, int howManyCounters) {
-//        int[][] corner = new int[howManyCounters][2];
-//        int counters = 0;
-//
-//
-//        for (int i = 3 * size + 1; i < 4 * size + 1; i++) {
-//            for (int j = size; j < 2 * size + 1; j++) {
-//
-//                if (board[i][j]) {
-//                    corner[counters][0] = i;
-//                    corner[counters][1] = j;
-//                    counters++;
-//                }
-//
-//                if (counters == howManyCounters) {
-//                    return corner;
-//                }
-//            }
-//        }
-//
-//        return corner;
-//    }
-//
-//    public static int[][] cornerE(boolean[][] board, int size, int howManyCounters) {
-//        int[][] corner = new int[howManyCounters][2];
-//        int counters = 0;
-//
-//        int counter;
-//        int set = 0;
-//
-//        for (int i = 2 * size + 1; i < 3 * size + 1; i++) {
-//            set++;
-//            counter = set;
-//            for (int j = 3 * size; j > 2 * size && counter != 0; j--) {
-//                if (board[i][j]) {
-//                    corner[counters][0] = i;
-//                    corner[counters][1] = j;
-//                    counters++;
-//                    counter--;
-//                }
-//
-//                if (counters == howManyCounters) {
-//                    return corner;
-//                }
-//            }
-//        }
-//
-//        return corner;
-//    }
-//
-//    public static int[][] cornerF(boolean[][] board, int size, int howManyCounters) {
-//        int[][] corner = new int[howManyCounters][2];
-//        int counters = 0;
-//        int counter;
-//
-//        for (int i = size; i < 2 * size; i++) {
-//            counter = size - i % size;
-//            for (int j = 3 * size; j > 2 * size && counter != 0; j--) {
-//                if (board[i][j]) {
-//                    corner[counters][0] = i;
-//                    corner[counters][1] = j;
-//                    counters++;
-//                    counter--;
-//                }
-//
-//                if (counters == howManyCounters) {
-//                    return corner;
-//                }
-//            }
-//        }
-//
-//        return corner;
-//    }
-
-    private static void fillPeak(int row, int cols, int k, boolean[][] board) {
+    private static void fillCorner(int row, int cols, int k, boolean[][] board) {
 
         int howManyFalse = cols / 2 - (k + 1) / 2;
         int col = 0;

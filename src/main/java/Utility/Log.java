@@ -1,7 +1,14 @@
 package Utility;
 
+/**
+ * Prosta klasa do wysyłania odpowiednio sformatowanych
+ * logów lub błedów na ekran konsoli.
+ */
 public class Log {
 
+    /**
+     * Czy logi mają być wyświetlane.
+     */
     public static boolean logFlag = true;
 
     public static void log(String log) {

@@ -1,7 +1,7 @@
 package Game;
 
 public class Player {
-    private int playerId;
+    private final int playerId;
 
     public Player(int id) {
         playerId = id;
@@ -9,9 +9,5 @@ public class Player {
 
     public int getPlayerId() {
         return playerId;
-    }
-
-    public void setPlayerId(int playerId) {
-        this.playerId = playerId;
     }
 }

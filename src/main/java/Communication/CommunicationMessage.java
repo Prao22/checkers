@@ -1,8 +1,14 @@
 package Communication;
 
+/**
+ * Wiadomość dotycząca połączenia między klientem a serwerem.
+ */
 public abstract class CommunicationMessage extends Message {
 
-    private CommunicationMessageType communicationMessageType;
+    /**
+     * Szczegółowa informacja czego dotyczy wiadomość.
+     */
+    private final CommunicationMessageType communicationMessageType;
 
     CommunicationMessage(CommunicationMessageType communicationMessageType) {
         super(MessageType.COMMUNICATION);
