@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static Utility.BoardCreator.Corners.*;
+
 public class Board {
 
     protected Field[][] board;
@@ -82,59 +84,53 @@ public class Board {
 
     private void initializeCounters(boolean[][] bBoard, int players, int counters) {
 
-        int[][] cornerA = BoardCreator.cornerA(bBoard, size, counters);
-        int[][] cornerAD = BoardCreator.cornerA(bBoard, size, BoardCreator.maxCounters(size));
-        int[][] cornerB = BoardCreator.cornerB(bBoard, size, counters);
-        int[][] cornerBD = BoardCreator.cornerB(bBoard, size, BoardCreator.maxCounters(size));
-        int[][] cornerC = BoardCreator.cornerC(bBoard, size, counters);
-        int[][] cornerCD = BoardCreator.cornerC(bBoard, size, BoardCreator.maxCounters(size));
-        int[][] cornerD = BoardCreator.cornerD(bBoard, size, counters);
-        int[][] cornerDD = BoardCreator.cornerD(bBoard, size, BoardCreator.maxCounters(size));
-        int[][] cornerE = BoardCreator.cornerE(bBoard, size, counters);
-        int[][] cornerED = BoardCreator.cornerE(bBoard, size, BoardCreator.maxCounters(size));
-        int[][] cornerF = BoardCreator.cornerF(bBoard, size, counters);
-        int[][] cornerFD = BoardCreator.cornerF(bBoard, size, BoardCreator.maxCounters(size));
+        int[][] cornerA = BoardCreator.getCorner(A, bBoard, size);
+        int[][] cornerB = BoardCreator.getCorner(B, bBoard, size);
+        int[][] cornerC = BoardCreator.getCorner(C, bBoard, size);
+        int[][] cornerD = BoardCreator.getCorner(D, bBoard, size);
+        int[][] cornerE = BoardCreator.getCorner(E, bBoard, size);
+        int[][] cornerF = BoardCreator.getCorner(F, bBoard, size);
 
         switch (players) {
             case 2:
                 setCounters(cornerA, 1, counters);
-                setDestination(cornerDD, 1);
+                setDestination(cornerD, 1);
                 setCounters(cornerD, 2, counters);
-                setDestination(cornerAD, 2);
+                setDestination(cornerA, 2);
                 break;
             case 3:
                 setCounters(cornerA, 1, counters);
-                setDestination(cornerDD, 1);
+                setDestination(cornerD, 1);
                 setCounters(cornerC, 2, counters);
-                setDestination(cornerFD, 2);
+                setDestination(cornerF, 2);
                 setCounters(cornerE, 3, counters);
-                setDestination(cornerBD, 3);
+                setDestination(cornerB, 3);
                 break;
 
             case 4:
                 setCounters(cornerB, 1, counters);
-                setDestination(cornerED, 1);
+                setDestination(cornerE, 1);
                 setCounters(cornerC, 2, counters);
-                setDestination(cornerFD, 2);
+                setDestination(cornerF, 2);
                 setCounters(cornerE, 3, counters);
-                setDestination(cornerBD, 3);
+                setDestination(cornerB, 3);
                 setCounters(cornerF, 4, counters);
-                setDestination(cornerCD, 4);
+                setDestination(cornerC, 4);
                 break;
 
             case 6:
                 setCounters(cornerA, 1, counters);
-                setDestination(cornerDD, 1);
+                setDestination(cornerD, 1);
                 setCounters(cornerB, 2, counters);
-                setDestination(cornerED, 2);
+                setDestination(cornerE, 2);
                 setCounters(cornerC, 3, counters);
-                setDestination(cornerFD, 3);
+                setDestination(cornerF, 3);
                 setCounters(cornerD, 4, counters);
-                setDestination(cornerAD, 4);
+                setDestination(cornerA, 4);
                 setCounters(cornerE, 5, counters);
-                setDestination(cornerBD, 5);
+                setDestination(cornerB, 5);
                 setCounters(cornerF, 6, counters);
-                setDestination(cornerCD, 6);
+                setDestination(cornerC, 6);
                 break;
         }
     }

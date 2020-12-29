@@ -12,6 +12,8 @@ import Client.BoardObserver;
 import Game.CounterColor;
 import Utility.BoardCreator;
 
+import static Utility.BoardCreator.Corners.*;
+
 
 public class Board extends JPanel {
 
@@ -127,30 +129,30 @@ public class Board extends JPanel {
     private void paintCorners(boolean[][] board) {
         switch (numberOfPlayers) {
             case 2:
-                paintCorner(BoardCreator.cornerA(board, size, numberOfCounters), CounterColor.getFromNumber(1));
-                paintCorner(BoardCreator.cornerD(board, size, numberOfCounters), CounterColor.getFromNumber(2));
+                paintCorner(BoardCreator.getCorner(A, board, size), CounterColor.getFromNumber(1));
+                paintCorner(BoardCreator.getCorner(D, board, size), CounterColor.getFromNumber(2));
                 break;
 
             case 3:
-                paintCorner(BoardCreator.cornerA(board, size, numberOfCounters), CounterColor.getFromNumber(1));
-                paintCorner(BoardCreator.cornerC(board, size, numberOfCounters), CounterColor.getFromNumber(2));
-                paintCorner(BoardCreator.cornerE(board, size, numberOfCounters), CounterColor.getFromNumber(3));
+                paintCorner(BoardCreator.getCorner(A, board, size), CounterColor.getFromNumber(1));
+                paintCorner(BoardCreator.getCorner(C, board, size), CounterColor.getFromNumber(2));
+                paintCorner(BoardCreator.getCorner(E, board, size), CounterColor.getFromNumber(3));
                 break;
 
             case 4:
-                paintCorner(BoardCreator.cornerB(board, size, numberOfCounters), CounterColor.getFromNumber(1));
-                paintCorner(BoardCreator.cornerC(board, size, numberOfCounters), CounterColor.getFromNumber(2));
-                paintCorner(BoardCreator.cornerE(board, size, numberOfCounters), CounterColor.getFromNumber(3));
-                paintCorner(BoardCreator.cornerF(board, size, numberOfCounters), CounterColor.getFromNumber(4));
+                paintCorner(BoardCreator.getCorner(B, board, size), CounterColor.getFromNumber(1));
+                paintCorner(BoardCreator.getCorner(C, board, size), CounterColor.getFromNumber(2));
+                paintCorner(BoardCreator.getCorner(E, board, size), CounterColor.getFromNumber(3));
+                paintCorner(BoardCreator.getCorner(F, board, size), CounterColor.getFromNumber(4));
                 break;
 
             case 6:
-                paintCorner(BoardCreator.cornerA(board, size, numberOfCounters), CounterColor.getFromNumber(1));
-                paintCorner(BoardCreator.cornerB(board, size, numberOfCounters), CounterColor.getFromNumber(2));
-                paintCorner(BoardCreator.cornerC(board, size, numberOfCounters), CounterColor.getFromNumber(3));
-                paintCorner(BoardCreator.cornerD(board, size, numberOfCounters), CounterColor.getFromNumber(4));
-                paintCorner(BoardCreator.cornerE(board, size, numberOfCounters), CounterColor.getFromNumber(5));
-                paintCorner(BoardCreator.cornerF(board, size, numberOfCounters), CounterColor.getFromNumber(6));
+                paintCorner(BoardCreator.getCorner(A, board, size), CounterColor.getFromNumber(1));
+                paintCorner(BoardCreator.getCorner(B, board, size), CounterColor.getFromNumber(2));
+                paintCorner(BoardCreator.getCorner(C, board, size), CounterColor.getFromNumber(3));
+                paintCorner(BoardCreator.getCorner(D, board, size), CounterColor.getFromNumber(4));
+                paintCorner(BoardCreator.getCorner(E, board, size), CounterColor.getFromNumber(5));
+                paintCorner(BoardCreator.getCorner(F, board, size), CounterColor.getFromNumber(6));
 
                 break;
         }
