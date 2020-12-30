@@ -60,23 +60,24 @@ public class Board {
 
         initializeCounters(b_board, players, counters);
     }
+
     private void createRelationBetweenFields() {
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < cols; col++) {
                 Field field = board[row][col];
 
-                if(field == null) {
+                if (field == null) {
                     continue;
                 }
 
                 Field[] neighbours = new Field[Field.MAX_NEIGHBOURS];
                 boolean evenRow = row % 2 == 0;
-                neighbours[Field.Direction.NE] = evenRow ? (row == 0 ? null : board[row - 1][col]) : (col == cols - 1 ? null : board[row-1][col+1]);
+                neighbours[Field.Direction.NE] = evenRow ? (row == 0 ? null : board[row - 1][col]) : (col == cols - 1 ? null : board[row - 1][col + 1]);
                 neighbours[Field.Direction.E] = col == cols - 1 ? null : board[row][col + 1];
-                neighbours[Field.Direction.SE] = evenRow ? (row == rows - 1 ? null : board[row + 1][col]) : (col == cols - 1 || row == rows - 1  ? null : board[row+1][col+1]);
-                neighbours[Field.Direction.SW] = !evenRow ? (row == rows - 1 ? null : board[row + 1][col]) : (col == 0 || row == rows - 1 ? null : board[row+1][col-1]);
+                neighbours[Field.Direction.SE] = evenRow ? (row == rows - 1 ? null : board[row + 1][col]) : (col == cols - 1 || row == rows - 1 ? null : board[row + 1][col + 1]);
+                neighbours[Field.Direction.SW] = !evenRow ? (row == rows - 1 ? null : board[row + 1][col]) : (col == 0 || row == rows - 1 ? null : board[row + 1][col - 1]);
                 neighbours[Field.Direction.W] = col == 0 ? null : board[row][col - 1];
-                neighbours[Field.Direction.NW] = !evenRow ? (board[row - 1][col]) : (col == 0 || row == 0 ? null : board[row-1][col-1]);
+                neighbours[Field.Direction.NW] = !evenRow ? (board[row - 1][col]) : (col == 0 || row == 0 ? null : board[row - 1][col - 1]);
                 field.setNeighbours(neighbours);
             }
         }
@@ -135,8 +136,7 @@ public class Board {
         }
     }
 
-    private void setCounters(int[][] corner, int playerId, int numberOfCounters)
-    {
+    private void setCounters(int[][] corner, int playerId, int numberOfCounters) {
         List<Counter> counterList = new ArrayList<>();
 
         for (int i = 0; i < numberOfCounters; i++) {
@@ -152,20 +152,5 @@ public class Board {
         for (int[] coords : corner) {
             board[coords[0]][coords[1]].setDestination(destination);
         }
-    }
-
-    public void print() {
-
-        for(int i = 0; i < rows; i++) {
-//            if(i % 2 == 1) {
-//                System.out.print(" ");
-//            }
-            for(int j = 0; j < cols; j++) {
-                System.out.print(board[i][j] == null ? "*" : "-");
-            }
-            System.out.println(" ");
-        }
-
-        System.out.println(board[1][2]);
     }
 }

@@ -1,0 +1,72 @@
+import Client.ServerHandler;
+import Communication.End;
+import Communication.Information;
+import Communication.Message;
+import Connection.ConnectionService;
+import Connection.IConnectionService;
+import org.junit.Test;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+
+import static org.mockito.Mockito.*;
+
+public class ServerHandlerTest {
+
+    @Test
+    public void receiveNotAMessage() {
+        IConnectionService service = mock(ConnectionService.class);
+        when(service.receiveObject()).thenReturn("abc");
+
+        ServerHandler serverHandler = new ServerHandler(service, new Object());
+        serverHandler.start();
+        when(service.receiveObject()).thenReturn(null);
+    }
+
+    @Test
+    public void unexpectedDisconnect() {
+        IConnectionService service = mock(ConnectionService.class);
+        when(service.receiveObject()).thenReturn(null);
+
+        ServerHandler serverHandler = new ServerHandler(service, new Object());
+        serverHandler.run();
+
+        verify(service).closeConnection();
+    }
+
+    @Test
+    public void lastInsertIsFirst() throws InterruptedException {
+
+        Message last = new Information("last");
+        final Message[] message = {last, new Information("AVC"), new Communication.Answer(true)};
+        final int[] receive = {-1};
+
+        IConnectionService service = mock(IConnectionService.class);
+        Object lock = mock(Object.class);
+
+        when(service.receiveObject()).thenAnswer(invocationOnMock -> {
+            receive[0]++;
+            if (receive[0] > 2) {
+                Thread.sleep(2000);
+                return null;
+            }
+            System.out.println("Wstawiam");
+            return message[receive[0]];
+        });
+
+        ServerHandler handler = new ServerHandler(service, lock);
+        handler.start();
+
+        Thread.sleep(1000);
+        assert handler.getNextMessage().equals(last);
+        assert handler.isAnyMessage();
+    }
+
+    @Test
+    public void expectedDisconnect() {
+        IConnectionService service = mock(IConnectionService.class);
+
+        ServerHandler serverHandler = new ServerHandler(service, new Object()); serverHandler.disconnect();
+        verify(service).sendObject(any(End.class));
+        verify(service).closeConnection();
+    }
+}

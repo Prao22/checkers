@@ -1,7 +1,5 @@
 package Game;
 
-import java.util.Arrays;
-
 public class Field {
     public static final int MAX_NEIGHBOURS = 6;
 
@@ -11,7 +9,7 @@ public class Field {
     protected Counter counter = null;
     protected Field[] neighbours = null;
 
-    Field(int row, int col) {
+    public Field(int row, int col) {
         this.row = row;
         this.col = col;
     }

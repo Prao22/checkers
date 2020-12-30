@@ -65,7 +65,7 @@ public class Client implements Sender, Connectable {
     private void serviceCommunicationMessage(CommunicationMessage message) {
         switch (message.getCommunicationMessageType()) {
             case INFORMATION: {
-                Log.log("Otrzymałem informacje dotyczaca komunikacji " + ((Information) message).toString());
+                Log.log("Otrzymałem informacje dotyczaca komunikacji " + message.toString());
                 break;
             }
 
@@ -115,11 +115,18 @@ public class Client implements Sender, Connectable {
         return setHandler(ip, port);
     }
 
+    /**
+     * Zwraca informacje czy jest połączony z serwerem.
+     * @return czy jest połączony z serwerem
+     */
     @Override
     public boolean isConnected() {
         return connected;
     }
 
+    /**
+     * Rozłacza się z serwerem powiadamiając go o tym.
+     */
     @Override
     public void disconnect() {
         if (connected) {
@@ -128,6 +135,11 @@ public class Client implements Sender, Connectable {
         }
     }
 
+    /**
+     * Wysyła wiadomość do serwera.
+     * @param message wiadomość którą chcemy wysłać
+     * @return czy wysyłka zakończyła się powodzeniem.
+     */
     @Override
     public boolean send(Message message) {
         if (connected) {

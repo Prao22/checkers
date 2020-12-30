@@ -53,9 +53,6 @@ public class Controller implements GameService, GameController {
             }
 
             case VOTING: {
-                Log.log("Jest głosowanie o pytaniu: " + ((Voting) message).getQuestion() );
-                boolean answer = guiController.showQuestion(((Voting) message).getQuestion());
-                sender.send(new Answer(answer));
                 break;
             }
 

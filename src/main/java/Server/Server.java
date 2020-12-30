@@ -9,6 +9,7 @@ import Utility.Log;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.*;
+
 import Game.Game;
 
 /**
@@ -89,7 +90,7 @@ public class Server implements Sender {
      *
      * @throws IOException rzucany jeśli połącznie zawiodło.
      */
-    public void waitForPlayers() throws IOException {
+    private void waitForPlayers() throws IOException {
         while (onlineClients < gameParameters.getNumberPlayers()) {
             addClient();
             onlineClients++;
@@ -205,7 +206,7 @@ public class Server implements Sender {
      * @param message odebrana wiadomość
      * @param who     kto wysłał wiadomość
      */
-    public void serviceCommunicationMessage(CommunicationMessage message, int who) {
+    private void serviceCommunicationMessage(CommunicationMessage message, int who) {
 
         switch (message.getCommunicationMessageType()) {
             case INFORMATION: {
@@ -226,7 +227,7 @@ public class Server implements Sender {
      *
      * @param clientId identyfikator gracza z którym chcemy się rozłączyć
      */
-    public void disconnectWith(int clientId) {
+    private void disconnectWith(int clientId) {
         clients.remove(clientId);
         onlineClients--;
         gameService.removePlayer(clientId);
@@ -238,7 +239,7 @@ public class Server implements Sender {
      * @param clientId gracz który się rozłączył
      * @return czy dostępny jest choć jeden gracz
      */
-    public boolean handleDisconnection(int clientId) {
+    private boolean handleDisconnection(int clientId) {
         disconnectWith(clientId);
         sendToAll(new Disconnection(clientId));
         //sendToAll(new Voting("Czy chcesz kontynuować gre?"));
@@ -251,7 +252,7 @@ public class Server implements Sender {
      *
      * @return czy dostępny jest choć jeden gracz.
      */
-    public boolean checkDisconnection() {
+    private boolean checkDisconnection() {
         //noinspection ForLoopReplaceableByForEach
         for (Iterator<ClientHandler> it = clients.values().iterator(); it.hasNext(); ) {
             ClientHandler h = it.next();
@@ -266,7 +267,7 @@ public class Server implements Sender {
 
     @Override
     public boolean send(Message message, int clientId) {
-        if (!clients.containsKey(clientId)) {
+        if (clients == null || !clients.containsKey(clientId)) {
             return false;
         }
 
@@ -390,14 +391,6 @@ public class Server implements Sender {
 
     public boolean isRunning() {
         return running;
-    }
-
-    public void setLogFlag(boolean logFlag) {
-        Log.logFlag = logFlag;
-    }
-
-    public boolean getLogFlag() {
-        return Log.logFlag;
     }
 
     public boolean isEnd() {
