@@ -2,34 +2,35 @@ package Client.InitConnection;
 
 import Client.*;
 import Client.GUI.GameWindow;
+import Connection.ConnectionService;
+import Connection.IConnectionService;
 import Game.Game;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
+
 /**
  * Okno dialogowe z polami IP oraz PORT do wypelnienia
- * 
- *
  */
 public class InitWindow extends JDialog {
 
-	/**
-	 * Tytuł gry
-	 */
+    /**
+     * Tytuł gry
+     */
     private JLabel labelTitle;
-    
+
     /**
      * Pola do wypelnienia przez użytkownika
      */
     private InputField textField;
-    
+
     /**
      * Obiekt za pomocą którego będziemy łączyć się z serwerem.
      */
     private ServerConnector serverConnector;
-    
+
     /**
      * Przycisk zatwierdzanjący wpisane dane
      */
@@ -65,7 +66,7 @@ public class InitWindow extends JDialog {
         add(labelTitle, new GBC(1, 1).setFill(GBC.NONE).setAnchor(GBC.SOUTH).setWeight(100, 100));
     }
 
-    
+
     /**
      * Dodajemy pola tekstowe.
      */
@@ -100,10 +101,14 @@ public class InitWindow extends JDialog {
 
     public static void main(String[] args) {
         Client client = new Client();
-        ServerConnector connector = new ServerConnector(client);
+        IConnectionService connectionService = new ConnectionService();
+        ServerConnector connector = new ServerConnector(connectionService);
 
         InitWindow init = new InitWindow(connector);
         init.waitForInput();
+
+        ServerHandler serverHandler = new ServerHandler(connectionService, client.getLock());
+        client.setHandler(serverHandler);
 
         if (!client.isConnected()) {
             return;
@@ -124,15 +129,14 @@ public class InitWindow extends JDialog {
 
     /**
      * Prywatna klasa obsługująca akcje generowane przez mysz.
-     * 
-     *
      */
     private class Click implements ActionListener {
-    	/**
-    	 * Akcja wykonująca się po kliknięciu w mysz.
-    	 * @param event wydarzenie do obsłużenia.
-    	 */
-    	@Override
+        /**
+         * Akcja wykonująca się po kliknięciu w mysz.
+         *
+         * @param event wydarzenie do obsłużenia.
+         */
+        @Override
         public void actionPerformed(ActionEvent event) {
 
             String ip = textField.getIp();

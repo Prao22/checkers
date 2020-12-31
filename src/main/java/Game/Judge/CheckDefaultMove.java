@@ -6,6 +6,9 @@ import Utility.Log;
 
 import static java.lang.Math.abs;
 
+/**
+ * Sprawdzenie czy ruch jest poprawny (czy pole nie zajęte czy skok ma skoczyc przez kogo)
+ */
 public class CheckDefaultMove extends JudgeDecorator {
     public CheckDefaultMove(Judge decoratedJudge) {
         super(decoratedJudge);
@@ -28,7 +31,6 @@ public class CheckDefaultMove extends JudgeDecorator {
         }
 
         Field buff;
-        Log.log("daje true JEST SKOK");
         wasJump = true;
 
         if (lastMove != null && lastMove.getWho() == who && from.getCounter() != lastMove.getTo().getCounter()) {

@@ -3,7 +3,7 @@ package Connection;
 /**
  * Podstawowy interfejs przy komunikacji.
  */
-public interface IConnectionService {
+public interface IConnectionService extends Connectable {
 
     /**
      * Wysłanie obiektu do połączonego z nami socketu.
@@ -17,6 +17,7 @@ public interface IConnectionService {
      * Odbiór obiektu wysłanego przez połączonego
      * z nami socketa. Gdy nie ma żadnego obieku w buforze
      * funkcja blokuje wątek dopóki żaden się nie pojawi.
+     *
      * @return obiekt który został wysłany
      */
     Object receiveObject();
@@ -25,5 +26,12 @@ public interface IConnectionService {
      * Zamyka połączenie z połączonym z nami socketem.
      */
     void closeConnection();
+
+    /**
+     * Sprawdza czy jest połączony.
+     *
+     * @return czy jest połączony
+     */
+    boolean isConnected();
 
 }

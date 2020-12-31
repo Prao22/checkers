@@ -9,7 +9,8 @@ public interface Sender {
 
     /**
      * Wysyłanie wiadomości do konkretnego gracza.
-     * @param message wiadomość którą chcemy wysłać.
+     *
+     * @param message  wiadomość którą chcemy wysłać.
      * @param clientId gracz do którego checmy wysłać wiadomość
      * @return czy udało się wysłać wiadomość
      */
@@ -17,6 +18,7 @@ public interface Sender {
 
     /**
      * Wysyłanie wiadomości do wszystkich graczy.
+     *
      * @param message wiadomość którą chcemy wysłać
      */
     void sendToAll(Message message);

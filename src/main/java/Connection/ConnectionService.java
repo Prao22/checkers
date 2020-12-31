@@ -31,6 +31,9 @@ public class ConnectionService implements IConnectionService {
         inObjects = new ObjectInputStream(in);
     }
 
+    public ConnectionService() {
+    }
+
     /**
      * Wysłanie obiektu do połączonego z nami socketu.
      *
@@ -79,5 +82,34 @@ public class ConnectionService implements IConnectionService {
             socket.close();
         } catch (IOException ignored) {
         }
+    }
+
+    @Override
+    public boolean isConnected() {
+        return socket != null && socket.isConnected();
+    }
+
+    /**
+     * Tworzy socket.
+     *
+     * @param ip   IP serwera
+     * @param port port serwera
+     * @return czy połączenie się udało
+     */
+    @Override
+    public boolean connect(String ip, int port) {
+        try {
+            socket = new Socket(ip, port);
+            in = socket.getInputStream();
+            out = socket.getOutputStream();
+            outObjects = new ObjectOutputStream(out);
+            outObjects.flush();
+            inObjects = new ObjectInputStream(in);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return false;
+        }
+
+        return true;
     }
 }

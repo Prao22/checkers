@@ -4,6 +4,9 @@ import Game.Field;
 import Game.LastMove;
 import Utility.Log;
 
+/**
+ * Sprawdzanie czy pionki na siebie nie beda nachodzic.
+ */
 public class CheckOverlappingCounters extends JudgeDecorator {
 
     public CheckOverlappingCounters(Judge decoratedJudge) {

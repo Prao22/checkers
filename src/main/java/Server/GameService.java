@@ -9,7 +9,8 @@ public interface GameService {
 
     /**
      * Obsługa wiadomości dotyczącej gry.
-     * @param message otrzymana wiadomość.
+     *
+     * @param message  otrzymana wiadomość.
      * @param playerId gracz który ją wysłał
      */
     void serviceMessage(GameMessage message, int playerId);

@@ -64,4 +64,8 @@ public class ServerHandler extends Handler {
     public boolean isAnyMessage() {
         return !receive.isEmpty();
     }
+
+    public boolean isConnected() {
+        return connectionService.isConnected();
+    }
 }

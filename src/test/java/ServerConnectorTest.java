@@ -1,10 +1,6 @@
-import Client.Client;
-import Client.Connectable;
+import Connection.Connectable;
 import Client.InitConnection.ServerConnector;
 import org.junit.Test;
-
-import java.io.IOException;
-import java.net.ServerSocket;
 
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;

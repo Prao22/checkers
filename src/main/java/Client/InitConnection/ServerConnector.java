@@ -1,6 +1,6 @@
 package Client.InitConnection;
 
-import Client.Connectable;
+import Connection.Connectable;
 
 /**
  * Klasa przy pomocy której użytkownik łączy się z serwerem
@@ -25,7 +25,7 @@ public class ServerConnector {
      */
     		
     public boolean connectionRequest(String ip, String port) {
-        int parsedPort = -1;
+        int parsedPort;
 
         try {
             parsedPort = Integer.parseInt(port);

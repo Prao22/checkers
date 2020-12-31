@@ -9,12 +9,34 @@ import java.util.Map;
 
 import static Utility.BoardCreator.Corners.*;
 
+/**
+ * Plansza logiczna gry.
+ */
 public class Board {
 
+    /**
+     * Pola planszy [row][column]
+     */
     protected Field[][] board;
+
+    /**
+     * Pionki na planszy.
+     */
     protected Map<Integer, List<Counter>> counters;
+
+    /**
+     * Rozmiar ramienia gwiazdy (ile pól)
+     */
     protected final int size;
+
+    /**
+     * Rozmiar planszy (wiersze)
+     */
     protected final int rows;
+
+    /**
+     * Rozmiar planszy (kolumny)
+     */
     protected final int cols;
 
     public Board(int size, int players, int howManyCounters) {
@@ -35,6 +57,10 @@ public class Board {
         return counters;
     }
 
+    /**
+     * Robi ruch pionkiem.
+     * @param move ruch który ma być wykonany.
+     */
     public void moveCounter(Move move) {
         int[] fromCoordinates = move.getFrom();
         int[] toCoordinates = move.getTo();
@@ -48,6 +74,12 @@ public class Board {
         from.setCounter(toCounter);
     }
 
+    /**
+     * Inicializacja planszy.
+     *
+     * @param players  liczba graczy
+     * @param counters liczba pionków dla każdego gracza
+     */
     private void fillBoard(int players, int counters) {
 
         boolean[][] b_board = BoardCreator.createBoard(size);
@@ -61,6 +93,9 @@ public class Board {
         initializeCounters(b_board, players, counters);
     }
 
+    /**
+     * Łączy pola, aby każde pole wiedziało z kim sąsiaduje.
+     */
     private void createRelationBetweenFields() {
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < cols; col++) {
@@ -83,6 +118,13 @@ public class Board {
         }
     }
 
+    /**
+     * Inicializuje pozycje pionków na planszy.
+     *
+     * @param bBoard   plansza logiczna (gdzie mogą być pionki)
+     * @param players  liczba graczy
+     * @param counters liczba pionków
+     */
     private void initializeCounters(boolean[][] bBoard, int players, int counters) {
 
         int[][] cornerA = BoardCreator.getCorner(A, bBoard, size);
@@ -136,6 +178,13 @@ public class Board {
         }
     }
 
+    /**
+     * Inicializuje pionki gracza w jego rogu.
+     *
+     * @param corner           domowy róg gracza
+     * @param playerId         gracz którego pionki są ustawiane
+     * @param numberOfCounters liczba pionków
+     */
     private void setCounters(int[][] corner, int playerId, int numberOfCounters) {
         List<Counter> counterList = new ArrayList<>();
 
@@ -148,6 +197,13 @@ public class Board {
         counters.put(playerId, counterList);
     }
 
+    /**
+     * Ustawienie, że dane pole jest celem dla gracza czyli że jeśli gracz przeniesie
+     * swoje pionki w te miejsce wygrywa.
+     *
+     * @param corner      pola które są celem
+     * @param destination id gracza dla którego są celem
+     */
     private void setDestination(int[][] corner, int destination) {
         for (int[] coords : corner) {
             board[coords[0]][coords[1]].setDestination(destination);

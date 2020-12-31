@@ -5,6 +5,11 @@ import Game.Field;
 import Game.LastMove;
 import Utility.Log;
 
+/**
+ * Domyślny sędzia z niewielkimi zasadami.
+ * Przeznaczony do dekorowania.
+ * [Konkretny Komponent]
+ */
 public class DefaultJudge extends Judge {
 
     public DefaultJudge(Board board) {

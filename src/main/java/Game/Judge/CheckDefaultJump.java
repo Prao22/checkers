@@ -6,6 +6,9 @@ import Utility.Log;
 
 import static java.lang.Math.abs;
 
+/**
+ * Sprawdzenie czy ruch jest poprawny (czy na dozwolone pole).
+ */
 public class CheckDefaultJump extends JudgeDecorator {
     public CheckDefaultJump(Judge decoratedJudge) {
         super(decoratedJudge);

@@ -1,15 +1,11 @@
 package Client;
 
 import Communication.*;
-import Connection.ConnectionService;
 import Game.CounterColor;
 import Utility.Log;
 
-import java.io.IOException;
-import java.net.Socket;
 
-
-public class Client implements Sender, Connectable {
+public class Client implements Sender {
 
     private ServerHandler handler;
     private boolean connected = false;
@@ -87,17 +83,15 @@ public class Client implements Sender, Connectable {
         }
     }
 
-    public boolean setHandler(String ip, int port) {
-        try {
-            this.handler = new ServerHandler(new ConnectionService(new Socket(ip, port)), lock);
+    public void setHandler(ServerHandler handler) {
+        this.handler = handler;
+
+        if (handler.isConnected()) {
             this.handler.start();
             Log.log("Klient zostal polaczony ze serwerem");
             connected = true;
-            return true;
-        } catch (IOException exception) {
-            Log.err("Nie udalo sie nawiazac polaczenia z serwerem!");
+        } else {
             connected = false;
-            return false;
         }
     }
 
@@ -105,18 +99,17 @@ public class Client implements Sender, Connectable {
         this.gameService = gameService;
     }
 
+    /**
+     * Rozłącza się z serwerem bez powiadomienia.
+     */
     private void disconnectWithoutNotifying() {
         connected = false;
         handler.closeConnection();
     }
 
-    @Override
-    public boolean connect(String ip, int port) {
-        return setHandler(ip, port);
-    }
-
     /**
      * Zwraca informacje czy jest połączony z serwerem.
+     *
      * @return czy jest połączony z serwerem
      */
     @Override
@@ -137,6 +130,7 @@ public class Client implements Sender, Connectable {
 
     /**
      * Wysyła wiadomość do serwera.
+     *
      * @param message wiadomość którą chcemy wysłać
      * @return czy wysyłka zakończyła się powodzeniem.
      */
@@ -147,5 +141,9 @@ public class Client implements Sender, Connectable {
         } else {
             return false;
         }
+    }
+
+    public Object getLock() {
+        return lock;
     }
 }

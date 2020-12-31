@@ -34,7 +34,8 @@ public class GameManager implements GameService {
 
     /**
      * Obsługa wiadomości dotyczącej gry.
-     * @param message otrzymana wiadomość.
+     *
+     * @param message  otrzymana wiadomość.
      * @param playerId gracz który ją wysłał
      */
     @Override
@@ -58,6 +59,7 @@ public class GameManager implements GameService {
 
     /**
      * Dodaje gracza do rozgrywki.
+     *
      * @param playerId numer gracza
      */
     @Override
@@ -67,6 +69,7 @@ public class GameManager implements GameService {
 
     /**
      * Usuwa gracza z rozgrywki.
+     *
      * @param playerId numer gracza
      */
     @Override
@@ -90,8 +93,9 @@ public class GameManager implements GameService {
     /**
      * Obsługa informacji dotyczących gry.
      * Używane podczas testowania.
+     *
      * @param information przesłana informacja
-     * @param playerId nadawca informacja
+     * @param playerId    nadawca informacja
      */
     private void informationHandler(GameInformation information, int playerId) {
         Log.log("Otrzymalem wiadomosc: \"" + information.getMessage() + "\" od gracza nr " + playerId);
@@ -102,7 +106,8 @@ public class GameManager implements GameService {
 
     /**
      * Obsługa odbieranych ruchów
-     * @param move ruch w grze
+     *
+     * @param move     ruch w grze
      * @param playerId gracz wykonujący ruch
      */
     private void moveHandler(Communication.Move move, int playerId) {
