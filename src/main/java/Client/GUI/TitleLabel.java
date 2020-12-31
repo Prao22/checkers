@@ -3,6 +3,11 @@ package Client.GUI;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Klasa obrabiająca tytuł gry.
+ * 
+ *
+ */
 public class TitleLabel extends JLabel {
 
     private final int MARGIN = 50;

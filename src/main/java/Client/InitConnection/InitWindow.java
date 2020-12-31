@@ -8,12 +8,31 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
-
+/**
+ * Okno dialogowe z polami IP oraz PORT do wypelnienia
+ * 
+ *
+ */
 public class InitWindow extends JDialog {
 
+	/**
+	 * Tytuł gry
+	 */
     private JLabel labelTitle;
+    
+    /**
+     * Pola do wypelnienia przez użytkownika
+     */
     private InputField textField;
+    
+    /**
+     * Obiekt za pomocą którego będziemy łączyć się z serwerem.
+     */
     private ServerConnector serverConnector;
+    
+    /**
+     * Przycisk zatwierdzanjący wpisane dane
+     */
     private JButton joinButton;
 
     public InitWindow(ServerConnector connector) {
@@ -36,6 +55,9 @@ public class InitWindow extends JDialog {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
 
+    /**
+     * Dodajemy tytuł gry.
+     */
     private void createLabels() {
         labelTitle = new JLabel("Chinese Checkers");
         labelTitle.setFont(new Font("Serif", Font.BOLD, 60));
@@ -43,12 +65,19 @@ public class InitWindow extends JDialog {
         add(labelTitle, new GBC(1, 1).setFill(GBC.NONE).setAnchor(GBC.SOUTH).setWeight(100, 100));
     }
 
+    
+    /**
+     * Dodajemy pola tekstowe.
+     */
     private void createInputComponent() {
         textField = new InputField();
         textField.setFonts(new Font("Arial", Font.PLAIN, 20));
         add(textField, new GBC(1, 2).setAnchor(GBC.CENTER).setWeight(100, 100));
     }
 
+    /**
+     * Dodajemy przycisk.
+     */
     private void createButton() {
         joinButton = new JButton("Join game");
         joinButton.setFont(new Font("Arial", Font.BOLD, 20));
@@ -60,6 +89,9 @@ public class InitWindow extends JDialog {
         setVisible(true);
     }
 
+    /**
+     * Zamyka okno.
+     */
     private void close() {
         setVisible(false);
         this.dispose();
@@ -90,7 +122,17 @@ public class InitWindow extends JDialog {
     }
 
 
+    /**
+     * Prywatna klasa obsługująca akcje generowane przez mysz.
+     * 
+     *
+     */
     private class Click implements ActionListener {
+    	/**
+    	 * Akcja wykonująca się po kliknięciu w mysz.
+    	 * @param event wydarzenie do obsłużenia.
+    	 */
+    	@Override
         public void actionPerformed(ActionEvent event) {
 
             String ip = textField.getIp();

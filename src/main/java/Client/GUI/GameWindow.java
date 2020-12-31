@@ -10,12 +10,36 @@ import java.awt.event.WindowListener;
 
 import javax.swing.*;
 
+/**
+ * Klasa ramki w której wyświetlona zostanie plansza z grą.
+ * 
+ *
+ */
 public class GameWindow extends JFrame implements WindowListener {
 
+	/**
+	 * Tytuł gry.
+	 */
     private static final String GAME_NAME = "Chinese Checkers";
+    
+    /**
+     * Etykieta zawierajaca tytuł gry.
+     */
     private final TitleLabel title;
+    
+    /**
+     * Plansza gry.
+     */
     private Board board;
+    
+    /**
+     * Stopka na której wyświetlone zostaną informacje o grze.
+     */
     private final Footer footer;
+    
+    /**
+     * Obserwator akcji gracza.
+     */
     private final GUIObserver observer;
 
     public GameWindow(GUIObserver observer) {
@@ -36,7 +60,7 @@ public class GameWindow extends JFrame implements WindowListener {
     public static void main(String[] args) {
         GameWindow a =new GameWindow(new GUIController(new Controller()));
         a.setVisible(true);
-        a.setBoardParameters(4, 4, 10);
+        a.setBoardParameters(8, 4, 10);
     }
 
     public void updateFooter(int onlinePlayers, int maxPlayers, String text) {

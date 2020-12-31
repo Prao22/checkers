@@ -3,6 +3,11 @@ package Client.InitConnection;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Pola tekstowe wraz z jego etykietą
+ * 
+ *
+ */
 public class FormLine extends JPanel {
     private final JTextField textField;
     private final JLabel label;
@@ -19,6 +24,10 @@ public class FormLine extends JPanel {
         add(textField);
     }
 
+    /**
+     * Ustawia aktualny font dla wyświetlanego tekstu.
+     * @param font Rodzaj fontu.
+     */
     public void setFonts(Font font) {
         label.setFont(font);
         textField.setFont(font);

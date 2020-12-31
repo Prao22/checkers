@@ -14,18 +14,63 @@ import Utility.BoardCreator;
 
 import static Utility.BoardCreator.Corners.*;
 
-
+/**
+ * Klasa planszy do gry, zajmująca się jej tworzeniem
+ * i kolorowaniem.
+ */
 public class Board extends JPanel {
 
+	/**
+	 * Współrzędne lewego górnego rogu prostokąta
+	 * w którym znajduje się narysowana plansza.
+	 */
     private static final int MARGINS = 250;
+    
+    /**
+     * Odległości pól planszy od siebie nawzajem.
+     */
     private static final int MARGIN_BETWEEN = BoardField.getDiameter() / 8;
+    
+    /**
+     * Wartość o jaką należy przesunąć co drugą kolumne planszy w prawo.
+     */
     private static final int OFFSET = BoardField.getDiameter() / 2;
+    
+    /**
+     * Rozmiar planszy identyfikowany jako
+     * ilość pól tworzących bok trójkąta w którym
+     * znajdują się pionki gracza.
+     */
     private final int size;
+    
+    /**
+     * Ilość wierszy w których znajdują się pola planszy.
+     */
     private final int rows;
+    
+    /**
+     * Ilość kolumn w których znajdują się pola planszy
+     */
     private final int cols;
+    
+    /**
+     * Ilość graczy.
+     */
     private final int numberOfPlayers;
+    
+    /**
+     * Ilość pionków gracza.
+     */
     private final int numberOfCounters;
+    
+    /**
+     * Obserwator wydarzeń planszy.
+     */
     private final BoardObserver observer;
+    
+    /**
+     * Tablica przetrzymująca współrzędne wszystkich pól planszy.
+     */
     private BoardField[][] fields;
 
     public Board(int size, int numberOfPlayers, int numberOfCounters, BoardObserver observer) {
@@ -44,6 +89,9 @@ public class Board extends JPanel {
         addMouseListener(new ClickAction());
     }
 
+    /**
+     * Rysuje plansze.
+     */
     private void createBoard() {
         fields = new BoardField[rows][cols];
         boolean[][] template = BoardCreator.createBoard(size);
@@ -71,6 +119,9 @@ public class Board extends JPanel {
         paintCorners(template);
     }
 
+    /**
+     * Koloruje plansze.
+     */
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -85,6 +136,11 @@ public class Board extends JPanel {
         }
     }
 
+    /**
+     * Przesuwa pionki z pola na pola.
+     * @param pairA Współrzędne pola z którego pionek ma zostać przesunięty.
+     * @param pairB Współrzędne pola na które pionek ma zostać przesunięty.
+     */
     public void move(int[] pairA, int[] pairB) {
 
         //zapisujemy kolor pola A
@@ -98,23 +154,49 @@ public class Board extends JPanel {
         fields[pairB[0]][pairB[1]].setColor(temporary);
         repaint(fields[pairB[0]][pairB[1]].getBounds());
     }
-
+    
+    /**
+     * Podświetla pole na które wskazano
+     * @param row Współrzędna x wskazanego pola.
+     * @param col Współrzędna y wskazanego pola.
+     */
     public void highlightField(int row, int col) {
         fields[row][col].setHighlighted(true);
         repaint(fields[row][col].getBounds());
     }
 
+    /**
+     * Znosi efekt podświetlenia pola
+     * @param row Współrzędna x podświetlonego pola.
+     * @param col Współrzędna y podświetlonego pola.
+     */
     public void normalField(int row, int col) {
         fields[row][col].setHighlighted(false);
         repaint(fields[row][col].getBounds());
     }
 
+    /**
+     * Zwraca kolor wskazanego pola.
+     * @param row Współrzędna x wskazanego pola
+     * @param col Współrzędna y wskazanego pola
+     * @return kolor wskazanego pola
+     */
     public Color getColorOfField(int row, int col) {
         return fields[row][col].getColor();
     }
 
+    /**
+     * 
+     * Prywatna klasa obsługująca zdarzenie myszy.
+     *
+     */
     private class ClickAction extends MouseAdapter {
 
+    	/**
+    	 * Obsługuje kliknięcie myszy.
+    	 * @param event Zdarzenie myszy.
+    	 */
+    	@Override
         public void mousePressed(MouseEvent event) {
             for (int i = 0; i < rows; i++) {
                 for (int j = 0; j < cols; j++) {
@@ -126,6 +208,10 @@ public class Board extends JPanel {
         }
     }
 
+    /**
+     * Koloruje pola graczy.
+     * @param board Tablica zawierająca dane o położeniu pól planszy. 
+     */
     private void paintCorners(boolean[][] board) {
         switch (numberOfPlayers) {
             case 2:
@@ -157,7 +243,11 @@ public class Board extends JPanel {
                 break;
         }
     }
-
+    /**
+     * Maluje pionki gracza w jego strefie.
+     * @param corner Strefa gracza.
+     * @param color kolor pionków gracza.
+     */
     private void paintCorner(int[][] corner, CounterColor color) {
         for (int i = 0; i < numberOfCounters; i++) {
             fields[corner[i][0]][corner[i][1]].setColor(color.getJavaColor());

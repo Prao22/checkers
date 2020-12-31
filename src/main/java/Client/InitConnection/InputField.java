@@ -4,9 +4,20 @@ package Client.InitConnection;/*
 
 import javax.swing.*;
 import java.awt.*;
-
+/**
+ * 
+ * Panelu z polami wypełnianymi przez użytkownika.
+ *
+ */
 public class InputField extends JPanel {
+	/**
+	 * Pole do którego użytkownik wpisuje adres IP
+	 */
     private final FormLine ipField;
+    
+    /**
+     * Pole do którego użytkownik wpisuje adres PORT
+     */
     private final FormLine portField;
 
     public InputField() {

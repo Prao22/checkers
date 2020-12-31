@@ -3,12 +3,34 @@ package Client.GUI;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
 
-
+/**
+ * Klasa pola planszy.
+ *
+ */
 public class BoardField extends Ellipse2D.Double {
+	/**
+	 * średnica pola planszy.
+	 */
     private static final int DIAMETER = 60;
+    
+    /**
+     * Kolor na jaki pole zostanie podświetlone.
+     */
     private static final Color HIGHLIGHT_COLOR = Color.ORANGE;
+    
+    /**
+     * Koordynaty pola.
+     */
     private final int[] coordinates;
+    
+    /**
+     * Kolor pola.
+     */
     private Color color;
+    
+    /**
+     * Informacja czy pole jest podświetlone, czy nie.
+     */
     private boolean highlighted = false;
 
     public BoardField(int x, int y, Color c) {
@@ -19,6 +41,11 @@ public class BoardField extends Ellipse2D.Double {
         this.color = c;
     }
 
+    /**
+     * Rysuje pole.
+     * @param g2 kontekst graficzny w którym należy malować.
+     * @param border kolor obramowania pola.
+     */
     public void draw(Graphics2D g2, Color border) {
         g2.setColor(color);
         g2.fill(this);
@@ -31,6 +58,10 @@ public class BoardField extends Ellipse2D.Double {
         g2.draw(this);
     }
 
+    /**
+     * Rysuje pole.
+     * @param g2 kontekst graficzny w którym należy malować.
+     */
     public void draw(Graphics2D g2) {
         if (highlighted) {
             draw(g2, HIGHLIGHT_COLOR);
