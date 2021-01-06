@@ -51,6 +51,7 @@ public class Game {
         judge = new CheckOverlappingCounters(judge);
         judge = new CheckDefaultJump(judge);
         judge = new CheckDefaultMove(judge);
+        judge = new CheckOnRightCorner(judge);
     }
 
     /**
@@ -99,6 +100,15 @@ public class Game {
     }
 
     /**
+     * Zwraca miejsce zajęte przez gracza.
+     *
+     * @return miejsce zajęte przez gracza.
+     */
+    public int getPlace() {
+        return judge.getPlace();
+    }
+
+    /**
      * Sprawdza kogo jest teraz tura.
      *
      * @return id gracza który teraz powinnien wykonać ruch.
@@ -121,6 +131,8 @@ public class Game {
      * Usuwa gracza z rozgrywki.
      *
      * @param playerId id gracza którego usunąć
+     *
+     * @return czy usunięty gracz miał wykonać ruch.
      */
     public boolean removePlayer(int playerId) {
 

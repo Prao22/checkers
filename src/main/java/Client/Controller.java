@@ -109,11 +109,11 @@ public class Controller implements GameService, GameController {
     }
     private void winnerHandler(Winner winner) {
         if(winner.getWinner() == myPlayerId) {
-            guiController.showInfo("Gratulacje!\nWygrales!");
+            guiController.showInfo("Gratulacje!\nZająłeś " + winner.getPlace() + " miejsce!");
+            end = true;
         } else {
-            guiController.showInfo("Gracz z kolorem " + CounterColor.getFromNumber(winner.getWinner()) + " wygrał!");
+            guiController.showInfo("Gracz z kolorem " + CounterColor.getFromNumber(winner.getWinner()) + " zajął " + winner.getPlace() + " miejsce!");
         }
-        end = true;
     }
 
     @Override

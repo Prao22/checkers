@@ -106,10 +106,8 @@ public class ConnectionService implements IConnectionService {
             outObjects.flush();
             inObjects = new ObjectInputStream(in);
         } catch (Exception exception) {
-            exception.printStackTrace();
             return false;
         }
-
         return true;
     }
 }

@@ -34,6 +34,8 @@ public class ServerTest {
             server.sendToAll(new Information("abc"));
             server.turnOff();
         }
+        server.setPort(1234);
+        server.setEnd(true);
     }
 
     @Test

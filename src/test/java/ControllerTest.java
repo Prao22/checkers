@@ -52,7 +52,7 @@ public class ControllerTest {
         controller.serviceMessage(new Answer(true));
         controller.serviceMessage(new YourTurn());
 
-        controller.serviceMessage(new Winner(1));
+        controller.serviceMessage(new Winner(1, 1));
         controller.close();
 
         controller.showError("err");

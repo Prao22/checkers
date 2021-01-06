@@ -5,6 +5,7 @@ import Game.Counter;
 import Game.Field;
 import Game.LastMove;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,12 +19,18 @@ public abstract class Judge {
     protected Board board;
 
     /**
+     * Id graczy którzy już wygrali gre.
+     */
+    protected ArrayList<Integer> alreadyWon;
+
+    /**
      * Czy w ostatnim ruchu był skok.
      */
     protected static boolean wasJump = false;
 
     public Judge(Board board) {
         this.board = board;
+        this.alreadyWon = new ArrayList<>();
     }
 
     /**
@@ -44,13 +51,18 @@ public abstract class Judge {
      */
     public int getWinner() {
 
-        int player = -1;
+        int player;
         boolean allOnRightPlace = true;
 
         for (List<Counter> counterList : board.getCounters().values()) {
-            for (Counter counter : counterList) {
 
-                player = counter.getPlayerId();
+            player = counterList.get(0).getPlayerId();
+
+            if(alreadyWon.contains(player)) {
+                continue;
+            }
+
+            for (Counter counter : counterList) {
 
                 if (!counter.onRightPlace()) {
                     allOnRightPlace = false;
@@ -59,6 +71,7 @@ public abstract class Judge {
             }
 
             if (allOnRightPlace) {
+                alreadyWon.add(player);
                 return player;
             }
 
@@ -66,6 +79,10 @@ public abstract class Judge {
         }
 
         return -1;
+    }
+
+    public int getPlace() {
+        return alreadyWon.size();
     }
 
     /**

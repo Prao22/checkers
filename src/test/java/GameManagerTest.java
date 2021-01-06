@@ -12,6 +12,29 @@ import static org.mockito.Mockito.*;
 public class GameManagerTest {
 
     @Test
+    public void informationTest() {
+        Sender sender = mock(Sender.class);
+        GameParameters parameters = new GameParameters();
+        Game game = mock(Game.class);
+        GameManager manager = new GameManager(sender, parameters, game);
+        manager.serviceMessage(new GameInformation("adsf"), 1);
+    }
+
+    @Test
+    public void winnerTest() {
+        Sender sender = mock(Sender.class);
+        GameParameters parameters = new GameParameters();
+        Game game = mock(Game.class);
+
+        when(game.makeMove(any(Move.class), anyInt())).thenReturn(true);
+        when(game.whoseTurn()).thenReturn(1);
+        when(game.isWinner()).thenReturn(1);
+        GameManager manager = new GameManager(sender, parameters, game);
+        manager.serviceMessage(new Communication.Move(new Move(new int[]{4, 4}, new int[]{5, 6})), 1);
+    }
+
+
+    @Test
     public void moveTest() {
 
         Sender sender = mock(Sender.class);

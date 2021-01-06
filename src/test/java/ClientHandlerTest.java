@@ -21,12 +21,13 @@ public class ClientHandlerTest {
 
         ClientHandler clientHandler = new ClientHandler(1, service, new Object());
         clientHandler.start();
+        assert 1 == clientHandler.getClientId();
 
         when(service.receiveObject()).thenReturn(null);
     }
 
     @Test
-    public void unexpectedDisconnect() throws InterruptedException {
+    public void unexpectedDisconnect() {
         IConnectionService service = mock(ConnectionService.class);
         when(service.receiveObject()).thenReturn(null);
 
@@ -46,18 +47,14 @@ public class ClientHandlerTest {
         IConnectionService service = mock(IConnectionService.class);
         Object lock = mock(Object.class);
 
-        when(service.receiveObject()).thenAnswer(new Answer<Object>() {
-
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
-                receive[0]++;
-                if (receive[0] > 2) {
-                    Thread.sleep(2000);
-                    return null;
-                }
-                System.out.println("Wstawiam");
-                return message[receive[0]];
+        when(service.receiveObject()).thenAnswer(invocationOnMock -> {
+            receive[0]++;
+            if (receive[0] > 2) {
+                Thread.sleep(2000);
+                return null;
             }
+            System.out.println("Wstawiam");
+            return message[receive[0]];
         });
 
         ClientHandler handler = new ClientHandler(1, service, lock);

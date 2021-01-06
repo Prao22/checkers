@@ -125,9 +125,10 @@ public class GameManager implements GameService {
         int winner = game.isWinner();
 
         if (winner != -1) {
-            sender.sendToAll(new Winner(winner));
-        } else {
-            sender.send(new YourTurn(), game.whoseTurn());
+            sender.sendToAll(new Winner(winner, game.getPlace()));
+            game.removePlayer(winner);
         }
+
+        sender.send(new YourTurn(), game.whoseTurn());
     }
 }
