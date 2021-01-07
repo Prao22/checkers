@@ -5,6 +5,11 @@ import Game.CounterColor;
 import Utility.Log;
 
 
+/**
+ * Klasa Client to pośrednik między serwerem a graczem.
+ * Udostępnia interfejs Sender który maksymalnie upraszcza wysyłanie wiadomości.
+ * Sam przekazuje do gracza odebrane wiadomości od serwera.
+ */
 public class Client implements Sender {
 
     private ServerHandler handler;
@@ -15,6 +20,10 @@ public class Client implements Sender {
     public Client() {
     }
 
+    /**
+     * Główna pętla klienta.
+     * Czeka na wiadomości i przekazuje je do odpowiednich funkcji.
+     */
     public void mainLoop() {
 
         while (connected) {
@@ -27,6 +36,9 @@ public class Client implements Sender {
         }
     }
 
+    /**
+     * Czeka na wiadomości od serwera 1 sekunde.
+     */
     private void waitForEvent() {
         synchronized (lock) {
             try {
@@ -37,6 +49,9 @@ public class Client implements Sender {
         }
     }
 
+    /**
+     * Sprawdzenie czy nastąpiło rozłączenie z serwerem.
+     */
     private void checkDisconnection() {
         if (!handler.isAlive() || handler.isEnd()) {
             Log.err("Disconnection!");
@@ -45,6 +60,11 @@ public class Client implements Sender {
         }
     }
 
+    /**
+     * Przekazanie odebranej wiadomości do odpowiedniego obiektu
+     * lub funkcji przeznaczonej do obsługi konkretnych typów wiadomości.
+     * @param message odebrana wiadomość.
+     */
     private void serviceMessage(Message message) {
         if (message == null) {
             return;
@@ -58,6 +78,10 @@ public class Client implements Sender {
         }
     }
 
+    /**
+     * Obsługa wiadomości dotyczących komunikacji z serwerem.
+     * @param message odebrana wiadomość.
+     */
     private void serviceCommunicationMessage(CommunicationMessage message) {
         switch (message.getCommunicationMessageType()) {
             case INFORMATION: {
@@ -81,22 +105,6 @@ public class Client implements Sender {
                 break;
             }
         }
-    }
-
-    public void setHandler(ServerHandler handler) {
-        this.handler = handler;
-
-        if (handler.isConnected()) {
-            this.handler.start();
-            Log.log("Klient zostal polaczony ze serwerem");
-            connected = true;
-        } else {
-            connected = false;
-        }
-    }
-
-    public void setGameService(GameService gameService) {
-        this.gameService = gameService;
     }
 
     /**
@@ -145,5 +153,21 @@ public class Client implements Sender {
 
     public Object getLock() {
         return lock;
+    }
+
+    public void setHandler(ServerHandler handler) {
+        this.handler = handler;
+
+        if (handler.isConnected()) {
+            this.handler.start();
+            Log.log("Klient zostal polaczony ze serwerem");
+            connected = true;
+        } else {
+            connected = false;
+        }
+    }
+
+    public void setGameService(GameService gameService) {
+        this.gameService = gameService;
     }
 }

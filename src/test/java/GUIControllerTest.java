@@ -10,8 +10,7 @@ import org.mockito.Mock;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class GUIControllerTest {
 
@@ -53,8 +52,11 @@ public class GUIControllerTest {
 
         controller.updateTurnInfo(true);
         controller.updateFooter("aa");
-        controller.updateFooter(1, 1,"a");
         controller.updatePlayerInfo(1);
+
+        verify(window).updateTurnInfo(anyBoolean());
+        verify(window).updateFooter(anyString());
+        verify(window).updatePlayerInfo(anyInt());
     }
 
     @Test
@@ -64,5 +66,7 @@ public class GUIControllerTest {
         controller.close();
         controller.buttonClicked();
         controller.repack();
+
+        verify(window).pack();
     }
 }

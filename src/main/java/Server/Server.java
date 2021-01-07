@@ -82,6 +82,8 @@ public class Server implements Sender {
         uiThread.start();
 
         server.run();
+        server.turnOff();
+        System.exit(0);
     }
 
     /**
@@ -148,7 +150,6 @@ public class Server implements Sender {
 
         while (!isEnd() && isRunning() && onlineClients > 0) {
 
-            Log.log("Klinetow: " + onlineClients);
             waitForEvent();
 
             if (checkDisconnection()) {
@@ -308,44 +309,29 @@ public class Server implements Sender {
         return 0;
     }
 
-    /**
-     * Zmiana stanu serwra.
-     * Z włączonego na wyłączony lub na odwrót.
-     *
-     * @return true jeśli nie było błędów
-     * false jeśli wystąpił jakiś błąd
-     */
-    public boolean changeState() {
-
-        if (isRunning()) {
-            return turnOff();
-        } else {
-            return turnOn();
-        }
-    }
 
     /**
      * Rozłączenie z klientami i zamknięcie wszystkich socketów.
      *
-     * @return true jeśli wszystko w porządku
-     * false jeśli wystąpił jakiś błąd przy rozłączaniu
      */
-    public boolean turnOff() {
-        for (ClientHandler c : clients.values()) {
-            c.sendMessage(null);
-            c.disconnect();
+    public void turnOff() {
+        if (clients != null) {
+            for (ClientHandler c : clients.values()) {
+                c.sendMessage(null);
+                c.disconnect();
+            }
+
+            clients.clear();
         }
 
-        clients = null;
-
         try {
-            serverSocket.close();
-            serverSocket = null;
+            if(serverSocket != null && !serverSocket.isClosed()) {
+                serverSocket.close();
+            }
+
             running = false;
-            return true;
         } catch (IOException exception) {
             Log.err("Nie moge zamknąć serverSocket!");
-            return false;
         }
     }
 

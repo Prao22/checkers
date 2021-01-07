@@ -12,13 +12,13 @@ public class GameParameters implements Serializable {
      * Liczba graczy biorących udział w grze.
      * Poprawmymi wartościami są 2, 3, 4, 6
      */
-    private int numberPlayers = 6;
+    private int numberPlayers = 1;
 
     /**
      * Długość ramienia planszy w polach. (Plansza to gwiazda)
      * Wartość >= 1
      */
-    private int numberFields = 1;
+    private int numberFields = 2;
 
     /**
      * Liczba pionków dla każdego gracza.
@@ -29,7 +29,7 @@ public class GameParameters implements Serializable {
 
     /**
      * Czy blokownie w ramieniu gwiazdy jest dozwolone.
-     * <<<Nie zaimplementowano>>>
+     * Nie zaimplementowano
      */
     private boolean blocks = true;
 

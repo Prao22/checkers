@@ -11,7 +11,8 @@ public class BoardField extends Ellipse2D.Double {
 	/**
 	 * średnica pola planszy.
 	 */
-    private static final int DIAMETER = 60;
+    //magiczne liczby wyprowadzone doświadczalnie (potrzebne aby aplikacja wyglądała jako tako na mniejszych ekranach)
+    private static int DIAMETER = Math.max(25, (int) (Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 64));
     
     /**
      * Kolor na jaki pole zostanie podświetlone.
@@ -86,6 +87,10 @@ public class BoardField extends Ellipse2D.Double {
         return this.color;
     }
 
+    public static void setSizeOfBoard(int size) {
+        //magiczne liczby wyprowadzone doświadczalnie (potrzebne aby aplikacja wyglądała jako tako na mniejszych ekranach)
+        DIAMETER = Math.max(25, (int) (Toolkit.getDefaultToolkit().getScreenSize().getWidth() / ((size/5 + 1)* 64)));
+    }
 
     public static int getDiameter() {
         return DIAMETER;

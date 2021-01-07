@@ -15,10 +15,6 @@ import java.awt.event.ActionListener;
  */
 public class Footer extends JPanel {
 
-	/**
-	 * Etykieta z informacjami o ilości połączonych graczy.
-	 */
-    private final JLabel connectedPlayersInfo;
     
     /**
      *  
@@ -47,17 +43,19 @@ public class Footer extends JPanel {
 
     public Footer(ButtonObserver observer) {
         this.observer = observer;
-        connectedPlayersInfo = new JLabel();
         info = new JLabel();
         playerInfo = new JLabel();
         turnInfo = new JLabel();
         noMove = new JButton();
 
-        Font normalFont = new Font("Arial", Font.PLAIN, 20);
-        Font italicFont = new Font("Arial", Font.ITALIC, 20);
-        Font boldFont = new Font("Monospaced", Font.BOLD, 25);
+        //magiczne liczby wyprowadzone doświadczalnie (potrzebne aby aplikacja wyglądała jako tako na mniejszych ekranach)
+        int fontSize = Math.max(12, (int) (Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 192));
+        int boldFontSize = Math.max(15, (int) (5 * Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 768));
 
-        connectedPlayersInfo.setFont(normalFont);
+        Font normalFont = new Font("Arial", Font.PLAIN, fontSize);
+        Font italicFont = new Font("Arial", Font.ITALIC, fontSize);
+        Font boldFont = new Font("Monospaced", Font.BOLD, boldFontSize);
+
         info.setFont(italicFont);
         playerInfo.setFont(italicFont);
         turnInfo.setFont(boldFont);
@@ -66,31 +64,23 @@ public class Footer extends JPanel {
 
         setLayout(new FlowLayout(FlowLayout.CENTER));
         add(info);
-        add(connectedPlayersInfo);
         add(playerInfo);
         add(turnInfo);
         add(noMove);
 
         noMove.addActionListener(actionEvent -> observer.buttonClicked());
-        noMove.setEnabled(false);
+        updateTurnInfo(false);
+        playerInfo.setText(" Twój id: " + "-" + " | Twój kolor: " + " - " + " | ");
+
+        setPreferredSize(new Dimension(info.getPreferredSize().width + playerInfo.getPreferredSize().width +
+                turnInfo.getPreferredSize().width + noMove.getPreferredSize().width, info.getPreferredSize().height + playerInfo.getPreferredSize().height +
+                turnInfo.getPreferredSize().height + noMove.getPreferredSize().height));
     }
 
-    /**
-     * 
-     * @param onlinePlayers Gracze którzy już dołączyli do gry.
-     * @param maxPlayers Ilość wszystkich graczy którzy mogą do gry dołączyć.
-     * @param text
-     */
-    public void update(int onlinePlayers, int maxPlayers, String text) {
-        connectedPlayersInfo.setText(onlinePlayers + "/" + maxPlayers);
-        if (text != null) {
-            info.setText(text);
-        }
-    }
 
     /**
      * Aktualizuje tekst etykiety "info".
-     * @param text Nowy tekst który chcemy wyświtlić.
+     * @param text nowy tekst który chcemy wyświtlić.
      */
     public void update(String text) {
         info.setText(text);
@@ -98,15 +88,15 @@ public class Footer extends JPanel {
 
     /**
      * Aktualizuje etykiete wyświetlajaca informacje o ilości graczy.
-     * @param playerId Ilość graczy ktora ma zostać wyświetlona.
+     * @param playerId ilość graczy ktora ma zostać wyświetlona.
      */
     public void updatePlayerInfo(int playerId) {
         playerInfo.setText(" Twój id: " + playerId + " | Twój kolor: " + CounterColor.getFromNumber(playerId) + " | ");
     }
 
     /**
-     * Aktualizuje etykiete wyświetlającą informacje o ruchu gracza.
-     * @param myTurn
+     * Aktualizuje etykiete wyświetlającą informacje czy jest tura gracza czy nie.
+     * @param myTurn czy jest moja tura.
      */
     public void updateTurnInfo(boolean myTurn) {
         if (myTurn) {

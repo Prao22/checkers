@@ -99,12 +99,15 @@ public class InitWindow extends JDialog {
     }
 
 
+    /**
+     * POCZĄTEK APLIKACJI DLA KLIENTA!
+     * @param args -
+     */
     public static void main(String[] args) {
         Client client = new Client();
         IConnectionService connectionService = new ConnectionService();
-        ServerConnector connector = new ServerConnector(connectionService);
 
-        InitWindow init = new InitWindow(connector);
+        InitWindow init = new InitWindow(new ServerConnector(connectionService));
         init.waitForInput();
 
         ServerHandler serverHandler = new ServerHandler(connectionService, client.getLock());

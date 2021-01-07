@@ -27,7 +27,7 @@ public class ServerTest {
         GameService gameService = mock(GameService.class);
         Server server = new Server();
         server.setGameService(gameService);
-        if(server.changeState()) {
+        if(server.turnOn()) {
             assert server.isRunning();
             assert !server.isEnd();
             server.send(new Information("abc"), 1);

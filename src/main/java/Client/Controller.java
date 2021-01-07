@@ -18,6 +18,12 @@ public class Controller implements GameService, GameController {
 
     }
 
+    /**
+     * Obsługa odebranych wiadomości od serwera dotyczących gry.
+     * Wiadomość jest przekazywana odpowiedniej funkcji przeznaczonej
+     * do obsługi konkretnych typów wiadomości.
+     * @param message otrzymana wiadomość.
+     */
     @Override
     public void serviceMessage(GameMessage message) {
 
@@ -86,7 +92,6 @@ public class Controller implements GameService, GameController {
     private void parametersHandler(Parameters mParameters) {
         parameters = mParameters.getParameters();
         Log.log("Otrzymałem parametry: " + parameters.toString());
-        guiController.updateFooter(parameters.getNumberPlayers(), parameters.getNumberPlayers(), null);
         guiController.setBoardParameters(parameters.getNumberFields(), parameters.getNumberPlayers(), parameters.getNumberCounter());
         guiController.showInfo("Zasady gry: \nLiczba graczy: " + parameters.getNumberPlayers() +
                 "\nLiczba pionkow: " + parameters.getNumberCounter() +
@@ -144,7 +149,6 @@ public class Controller implements GameService, GameController {
 
     @Override
     public void close() {
-
     }
 
     public void setSender(Sender sender) {
