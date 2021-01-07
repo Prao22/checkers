@@ -55,16 +55,7 @@ public class GameWindow extends JFrame implements WindowListener {
         setResizable(true);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    }
-
-    public static void main(String[] args) {
-        GameWindow a =new GameWindow(new GUIController(new Controller()));
-        a.setVisible(true);
-        a.setBoardParameters(8, 4, 10);
-    }
-
-    public void updateFooter(int onlinePlayers, int maxPlayers, String text) {
-        footer.update(onlinePlayers, maxPlayers, text);
+        pack();
     }
 
     public void updateFooter(String text) {

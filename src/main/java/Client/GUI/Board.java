@@ -20,54 +20,54 @@ import static Utility.BoardCreator.Corners.*;
  */
 public class Board extends JPanel {
 
-	/**
-	 * Współrzędne lewego górnego rogu prostokąta
-	 * w którym znajduje się narysowana plansza.
-	 */
-    private static final int MARGINS = 250;
-    
+    /**
+     * Współrzędne lewego górnego rogu prostokąta
+     * w którym znajduje się narysowana plansza.
+     */
+    private static int MARGINS = 250;
+
     /**
      * Odległości pól planszy od siebie nawzajem.
      */
-    private static final int MARGIN_BETWEEN = BoardField.getDiameter() / 8;
-    
+    private static int MARGIN_BETWEEN = BoardField.getDiameter() / 8;
+
     /**
      * Wartość o jaką należy przesunąć co drugą kolumne planszy w prawo.
      */
-    private static final int OFFSET = BoardField.getDiameter() / 2;
-    
+    private static int OFFSET = BoardField.getDiameter() / 2;
+
     /**
      * Rozmiar planszy identyfikowany jako
      * ilość pól tworzących bok trójkąta w którym
      * znajdują się pionki gracza.
      */
     private final int size;
-    
+
     /**
      * Ilość wierszy w których znajdują się pola planszy.
      */
     private final int rows;
-    
+
     /**
      * Ilość kolumn w których znajdują się pola planszy
      */
     private final int cols;
-    
+
     /**
      * Ilość graczy.
      */
     private final int numberOfPlayers;
-    
+
     /**
      * Ilość pionków gracza.
      */
     private final int numberOfCounters;
-    
+
     /**
      * Obserwator wydarzeń planszy.
      */
     private final BoardObserver observer;
-    
+
     /**
      * Tablica przetrzymująca współrzędne wszystkich pól planszy.
      */
@@ -75,6 +75,12 @@ public class Board extends JPanel {
 
     public Board(int size, int numberOfPlayers, int numberOfCounters, BoardObserver observer) {
         this.size = size;
+        BoardField.setSizeOfBoard(size);
+        OFFSET = BoardField.getDiameter() / 2;
+        MARGIN_BETWEEN = BoardField.getDiameter() / 8;
+        //magiczne liczby wyprowadzone doświadczalnie (potrzebne aby aplikacja wyglądała jako tako na mniejszych ekranach)
+        MARGINS = (int) (15 * Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 384);
+
         this.rows = BoardCreator.howManyRows(size);
         this.cols = BoardCreator.howManyCols(size);
         this.numberOfPlayers = numberOfPlayers;
@@ -83,7 +89,7 @@ public class Board extends JPanel {
         observer.attach(this);
 
         createBoard();
-        setPreferredSize(new Dimension(2 * MARGINS + cols * (BoardField.getDiameter() + MARGIN_BETWEEN),
+        setPreferredSize(new Dimension(2 * MARGINS + cols * (BoardField.getDiameter() + MARGIN_BETWEEN) + OFFSET - MARGIN_BETWEEN,
                 2 * MARGINS + rows * (BoardField.getDiameter() + MARGIN_BETWEEN)));
 
         addMouseListener(new ClickAction());
@@ -138,6 +144,7 @@ public class Board extends JPanel {
 
     /**
      * Przesuwa pionki z pola na pola.
+     *
      * @param pairA Współrzędne pola z którego pionek ma zostać przesunięty.
      * @param pairB Współrzędne pola na które pionek ma zostać przesunięty.
      */
@@ -154,9 +161,10 @@ public class Board extends JPanel {
         fields[pairB[0]][pairB[1]].setColor(temporary);
         repaint(fields[pairB[0]][pairB[1]].getBounds());
     }
-    
+
     /**
      * Podświetla pole na które wskazano
+     *
      * @param row Współrzędna x wskazanego pola.
      * @param col Współrzędna y wskazanego pola.
      */
@@ -167,6 +175,7 @@ public class Board extends JPanel {
 
     /**
      * Znosi efekt podświetlenia pola
+     *
      * @param row Współrzędna x podświetlonego pola.
      * @param col Współrzędna y podświetlonego pola.
      */
@@ -177,26 +186,30 @@ public class Board extends JPanel {
 
     /**
      * Zwraca kolor wskazanego pola.
+     *
      * @param row Współrzędna x wskazanego pola
      * @param col Współrzędna y wskazanego pola
      * @return kolor wskazanego pola
      */
     public Color getColorOfField(int row, int col) {
+        if (fields[row][col] == null) {
+            return null;
+        }
+
         return fields[row][col].getColor();
     }
 
     /**
-     * 
      * Prywatna klasa obsługująca zdarzenie myszy.
-     *
      */
     private class ClickAction extends MouseAdapter {
 
-    	/**
-    	 * Obsługuje kliknięcie myszy.
-    	 * @param event Zdarzenie myszy.
-    	 */
-    	@Override
+        /**
+         * Obsługuje kliknięcie myszy.
+         *
+         * @param event Zdarzenie myszy.
+         */
+        @Override
         public void mousePressed(MouseEvent event) {
             for (int i = 0; i < rows; i++) {
                 for (int j = 0; j < cols; j++) {
@@ -210,7 +223,8 @@ public class Board extends JPanel {
 
     /**
      * Koloruje pola graczy.
-     * @param board Tablica zawierająca dane o położeniu pól planszy. 
+     *
+     * @param board Tablica zawierająca dane o położeniu pól planszy.
      */
     private void paintCorners(boolean[][] board) {
         switch (numberOfPlayers) {
@@ -243,10 +257,12 @@ public class Board extends JPanel {
                 break;
         }
     }
+
     /**
      * Maluje pionki gracza w jego strefie.
+     *
      * @param corner Strefa gracza.
-     * @param color kolor pionków gracza.
+     * @param color  kolor pionków gracza.
      */
     private void paintCorner(int[][] corner, CounterColor color) {
         for (int i = 0; i < numberOfCounters; i++) {

@@ -32,7 +32,7 @@ public class ServerConsoleUI extends ConsoleUI implements Runnable {
                     settingsUI.loop();
                     break;
                 case 3:
-                    if (watchedServer.isRunning() || !watchedServer.changeState()) {
+                    if (watchedServer.isRunning() || !watchedServer.turnOn()) {
                         System.out.println("Nie udało się zmienić stanu!");
                     } else {
                         synchronized (serverLock) {
@@ -42,7 +42,7 @@ public class ServerConsoleUI extends ConsoleUI implements Runnable {
                     break;
                 case 5:
                     if (watchedServer.isRunning()) {
-                        watchedServer.changeState();
+                        watchedServer.turnOff();
                     }
                     watchedServer.setEnd(true);
                     return;

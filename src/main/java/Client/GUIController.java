@@ -39,11 +39,6 @@ public class GUIController implements GUIService, GUIObserver {
     }
 
     @Override
-    public void updateFooter(int onlinePlayers, int maxPlayers, String text) {
-        mainWindow.updateFooter(onlinePlayers, maxPlayers, text);
-    }
-
-    @Override
     public void updateFooter(String text) {
         mainWindow.updateFooter(text);
     }
@@ -86,7 +81,8 @@ public class GUIController implements GUIService, GUIObserver {
     @Override
     public void clickNotify(int row, int col) {
 
-        if (!observedBoard.getColorOfField(row, col).equals(gameController.getColor().getJavaColor()) && !secondClick) {
+        if (observedBoard.getColorOfField(row, col) == null || gameController.getColor() == null ||
+                (!observedBoard.getColorOfField(row, col).equals(gameController.getColor().getJavaColor()) && !secondClick)) {
             return;
         }
 
