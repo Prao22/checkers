@@ -4,6 +4,7 @@ import Communication.*;
 import Connection.ConnectionService;
 import Game.GameParameters;
 import Server.ConsoleUI.ServerConsoleUI;
+import Server.Database.DatabaseConnector;
 import Utility.Log;
 
 import java.io.IOException;
@@ -50,7 +51,12 @@ public class Server implements Sender {
     /**
      * Klasa która obsługuje wiadomości dotyczące gry.
      */
-    private GameService gameService;
+    private GameService gameService = null;
+
+    /**
+     * Klasa która obsługuje tryb wysyłania powtórek gier.
+     */
+    private ReplayService replayService = null;
 
     /**
      * Czy serwer jest dostępny.
@@ -68,6 +74,11 @@ public class Server implements Sender {
      */
     private final Object lock = new Object();
 
+    /**
+     * Tryb gry czy ogladania.
+     */
+    private boolean isGame = true;
+
     public Server() {
         Log.log("Konstruktor serwera");
         gameParameters = new GameParameters();
@@ -75,7 +86,6 @@ public class Server implements Sender {
 
     public static void main(String[] args) {
         Server server = new Server();
-        server.setGameService(new GameManager(server, server.getGameParameters(), new Game()));
 
         ServerConsoleUI ui = new ServerConsoleUI(server, server.getLock());
         Thread uiThread = new Thread(ui);
@@ -95,6 +105,8 @@ public class Server implements Sender {
     private void waitForPlayers() throws IOException {
         while (onlineClients < gameParameters.getNumberPlayers()) {
             addClient();
+            gameService.addPlayer(onlineClients + 1);
+            send(new Parameters(gameParameters), onlineClients + 1);
             onlineClients++;
         }
 
@@ -110,12 +122,8 @@ public class Server implements Sender {
     private void addClient() throws IOException {
         clients.put(onlineClients + 1, new ClientHandler(onlineClients + 1,
                 new ConnectionService(serverSocket.accept()), lock));
-
-        //sendToAll(new GameInformation("Dołączył kolejny gracz aktualny stan: " + (onlineClients + 1) + "/" + gameParameters.getNumberPlayers()));
         clients.get(onlineClients + 1).start();
-        gameService.addPlayer(onlineClients + 1);
-        send(new Parameters(gameParameters), onlineClients + 1);
-        Log.log("Dołączył gracz.");
+        Log.log("Dołączył klient.");
     }
 
     /**
@@ -127,6 +135,17 @@ public class Server implements Sender {
             return;
         }
 
+        if(isGame) {
+            gameRun();
+        } else {
+            replayRun();
+        }
+
+    }
+
+    private void gameRun() {
+        setGameService(new GameManager(this, getGameParameters(), new Game(), DatabaseConnector.getInstance()));
+
         try {
             waitForPlayers();
         } catch (IOException exception) {
@@ -134,19 +153,38 @@ public class Server implements Sender {
             return;
         }
 
-        mainLoop();
-    }
-
-    /**
-     * Główna pętla serwera, działająca podczas gry.
-     */
-    private void mainLoop() {
-
         for (ClientHandler c : clients.values()) {
             c.sendMessage(new Start(c.getClientId()));
         }
 
         gameService.start();
+
+        mainLoop();
+    }
+
+    private void replayRun() {
+        try {
+            addClient();
+            onlineClients++;
+        } catch (IOException exception) {
+            exception.printStackTrace();
+            return;
+        }
+
+        send(new ReplayMode(), 1);
+        setReplayService(new ReplayManager(this, DatabaseConnector.getInstance()));
+        replayService.setClient(1);
+
+        replayService.start();
+
+        mainLoop();
+    }
+
+
+    /**
+     * Główna pętla serwera, działająca podczas gry i odtwarzania powtorek.
+     */
+    private void mainLoop() {
 
         while (!isEnd() && isRunning() && onlineClients > 0) {
 
@@ -195,9 +233,12 @@ public class Server implements Sender {
             //serwer sie tym zajmuje
             serviceCommunicationMessage((CommunicationMessage) message, who);
 
-        } else if (message.getType() == MessageType.GAME) {
+        } else if (message.getType() == MessageType.GAME && gameService != null) {
             //przekazuje do managera gry
             gameService.serviceMessage((GameMessage) message, who);
+        } else if (message.getType() == MessageType.REPLAY && replayService != null) {
+            //przekazuje do managera powtorek
+            replayService.serviceMessage((ReplayMessage) message, who);
         }
     }
 
@@ -231,7 +272,10 @@ public class Server implements Sender {
     private void disconnectWith(int clientId) {
         clients.remove(clientId);
         onlineClients--;
-        gameService.removePlayer(clientId);
+
+        if(gameService != null) {
+            gameService.removePlayer(clientId);
+        }
     }
 
     /**
@@ -353,6 +397,24 @@ public class Server implements Sender {
             Log.err("Nie moge otworzyć serverSocket!");
             return false;
         }
+    }
+
+    public void changeMode() {
+        isGame = !isGame;
+
+        if(!isGame) {
+            gameParameters.setNumberPlayers(1);
+        } else {
+            gameParameters.setNumberPlayers(2);
+        }
+    }
+
+    public void setReplayService(ReplayService replayService) {
+        this.replayService = replayService;
+    }
+
+    public boolean isGame() {
+        return isGame;
     }
 
     public int getOnlineClients() {

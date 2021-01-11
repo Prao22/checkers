@@ -15,7 +15,7 @@ public class Client implements Sender {
     private ServerHandler handler;
     private boolean connected = false;
     private final Object lock = new Object();
-    private GameService gameService;
+    private MessageController messageController;
 
     public Client() {
     }
@@ -55,7 +55,7 @@ public class Client implements Sender {
     private void checkDisconnection() {
         if (!handler.isAlive() || handler.isEnd()) {
             Log.err("Disconnection!");
-            gameService.showError("Utracono połączenie z serwerem!");
+            messageController.showError("Utracono połączenie z serwerem!");
             disconnectWithoutNotifying();
         }
     }
@@ -72,9 +72,8 @@ public class Client implements Sender {
 
         if (message.getType() == MessageType.COMMUNICATION) {
             serviceCommunicationMessage((CommunicationMessage) message);
-
-        } else if (message.getType() == MessageType.GAME) {
-            gameService.serviceMessage((GameMessage) message);
+        } else  {
+            messageController.serviceMessage(message);
         }
     }
 
@@ -93,15 +92,27 @@ public class Client implements Sender {
                 Disconnection disconnection = (Disconnection) message;
                 Log.err("Gracz o id " + disconnection.getPlayerId() + " i kolorze " +
                         CounterColor.getFromNumber(disconnection.getPlayerId()) + " się rozłączył!");
-                gameService.showError("Gracz o id " + disconnection.getPlayerId() + " i kolorze " +
+                messageController.showError("Gracz o id " + disconnection.getPlayerId() + " i kolorze " +
                         CounterColor.getFromNumber(disconnection.getPlayerId()) + " się rozłączył!");
                 break;
             }
 
             case END: {
                 Log.err("Sygnał END");
-                gameService.showError("Serwer się rozłączył!");
+                messageController.showError("Serwer się rozłączył!");
                 disconnect();
+                break;
+            }
+
+            case REPLAY_MODE: {
+                Log.log("Tryb oglądania!");
+                messageController.showInfo("Tryb oglądnia!");
+
+                GUIController guiController = messageController.getGuiController();
+                messageController = new ReplayController();
+                messageController.setGuiController(guiController);
+                messageController.setSender(this);
+                guiController.setController(messageController);
                 break;
             }
         }
@@ -167,7 +178,7 @@ public class Client implements Sender {
         }
     }
 
-    public void setGameService(GameService gameService) {
-        this.gameService = gameService;
+    public void setMessageController(MessageController messageController) {
+        this.messageController = messageController;
     }
 }

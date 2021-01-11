@@ -21,7 +21,8 @@ public class ServerConsoleUI extends ConsoleUI implements Runnable {
             printInBorder("SERWER");
             printMenu(new String[]{"Ustawienia", "Stan: " + (watchedServer.isRunning() ? "ON" : "OFF"),
                     watchedServer.isRunning() ? "-" : "Start",
-                    "Połączonych graczy: " + watchedServer.getOnlineClients() + "/" + watchedServer.getMaxClients(), "Zakoncz"});
+                    "Połączonych graczy: " + watchedServer.getOnlineClients() + "/" + watchedServer.getMaxClients(),
+                    "Tryb serwera: " + (watchedServer.isGame() ? "Gra" : "Ogladanie"), "Zakoncz"});
 
             System.out.println("Aby odświeżyć informacje o serwerze kliknij cokolwiek i zatwierdz enterem.");
 
@@ -41,6 +42,9 @@ public class ServerConsoleUI extends ConsoleUI implements Runnable {
                     }
                     break;
                 case 5:
+                    watchedServer.changeMode();
+                    break;
+                case 6:
                     if (watchedServer.isRunning()) {
                         watchedServer.turnOff();
                     }

@@ -5,5 +5,5 @@ package Communication;
  * przesyłana wiadomość.
  */
 public enum MessageType {
-    COMMUNICATION, GAME
+    COMMUNICATION, GAME, REPLAY
 }

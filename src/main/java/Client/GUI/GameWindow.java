@@ -1,7 +1,5 @@
 package Client.GUI;
 
-import Client.Controller;
-import Client.GUIController;
 import Client.GUIObserver;
 
 import java.awt.*;
@@ -40,7 +38,7 @@ public class GameWindow extends JFrame implements WindowListener {
     /**
      * Obserwator akcji gracza.
      */
-    private final GUIObserver observer;
+    private GUIObserver observer;
 
     public GameWindow(GUIObserver observer) {
         setTitle(GAME_NAME);
@@ -76,6 +74,16 @@ public class GameWindow extends JFrame implements WindowListener {
         getContentPane().add(this.board, BorderLayout.CENTER);
         setVisible(true);
         pack();
+    }
+
+    public void setReplayMode() {
+        this.toFront();
+        footer.setReplayMode();
+    }
+
+    public void setObserver(GUIObserver observer) {
+        this.observer = observer;
+        footer.setObserver(observer);
     }
 
     @Override

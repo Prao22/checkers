@@ -4,7 +4,6 @@ import Client.*;
 import Client.GUI.GameWindow;
 import Connection.ConnectionService;
 import Connection.IConnectionService;
-import Game.Game;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -104,9 +103,12 @@ public class InitWindow extends JDialog {
      * @param args -
      */
     public static void main(String[] args) {
-        Client client = new Client();
-        IConnectionService connectionService = new ConnectionService();
 
+        //ApplicationContext context = new ClassPathXmlApplicationContext("spring_client.xml");
+
+        Client client = new Client();
+
+        IConnectionService connectionService = new ConnectionService();
         InitWindow init = new InitWindow(new ServerConnector(connectionService));
         init.waitForInput();
 
@@ -117,16 +119,16 @@ public class InitWindow extends JDialog {
             return;
         }
 
-        Controller controller = new Controller();
+        GameController gameController = new GameController();
+        client.setMessageController(gameController);
+        gameController.setSender(client);
 
-        client.setGameService(controller);
-        controller.setSender(client);
-
-        GUIController guiController = new GUIController(controller);
+        GUIController guiController = new GUIController(gameController);
         GameWindow window = new GameWindow(guiController);
         guiController.setWindow(window);
-        controller.setGuiController(guiController);
+        gameController.setGuiController(guiController);
         client.mainLoop();
+        System.exit(0);
     }
 
 

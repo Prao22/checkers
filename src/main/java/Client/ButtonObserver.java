@@ -1,7 +1,7 @@
 package Client;
 
 /**
- * Zainteresowany kliknieciem przycisku zakończenia tury.
+ * Zainteresowany kliknieciem przyciskow na footerze.
  */
 public interface ButtonObserver {
 

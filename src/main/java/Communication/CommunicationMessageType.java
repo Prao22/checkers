@@ -5,5 +5,5 @@ package Communication;
  * Konkretnie określają czego dotyczy ta wiadomość.
  */
 public enum CommunicationMessageType {
-    INFORMATION, END, DISCONNECTION
+    INFORMATION, END, DISCONNECTION, REPLAY_MODE
 }

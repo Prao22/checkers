@@ -5,8 +5,6 @@ import Game.CounterColor;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * Klasa stopki z informacjami o grze.
@@ -34,19 +32,19 @@ public class Footer extends JPanel {
     /**
      * Przycisk za pośrednictwem którego gracz możne zpasować ruch w turze.
      */
-    private final JButton noMove;
+    private final JButton button;
     
     /**
      * Obserwator akcji przycisku.
      */
-    private final ButtonObserver observer;
+    private ButtonObserver observer;
 
     public Footer(ButtonObserver observer) {
         this.observer = observer;
         info = new JLabel();
         playerInfo = new JLabel();
         turnInfo = new JLabel();
-        noMove = new JButton();
+        button = new JButton();
 
         //magiczne liczby wyprowadzone doświadczalnie (potrzebne aby aplikacja wyglądała jako tako na mniejszych ekranach)
         int fontSize = Math.max(12, (int) (Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 192));
@@ -59,22 +57,22 @@ public class Footer extends JPanel {
         info.setFont(italicFont);
         playerInfo.setFont(italicFont);
         turnInfo.setFont(boldFont);
-        noMove.setFont(normalFont);
-        noMove.setText("Oddaj ruch");
+        button.setFont(normalFont);
+        button.setText("Oddaj ruch");
 
         setLayout(new FlowLayout(FlowLayout.CENTER));
         add(info);
         add(playerInfo);
         add(turnInfo);
-        add(noMove);
+        add(button);
 
-        noMove.addActionListener(actionEvent -> observer.buttonClicked());
+        button.addActionListener(actionEvent -> observer.buttonClicked());
         updateTurnInfo(false);
         playerInfo.setText(" Twój id: " + "-" + " | Twój kolor: " + " - " + " | ");
 
         setPreferredSize(new Dimension(info.getPreferredSize().width + playerInfo.getPreferredSize().width +
-                turnInfo.getPreferredSize().width + noMove.getPreferredSize().width, info.getPreferredSize().height + playerInfo.getPreferredSize().height +
-                turnInfo.getPreferredSize().height + noMove.getPreferredSize().height));
+                turnInfo.getPreferredSize().width + button.getPreferredSize().width, info.getPreferredSize().height + playerInfo.getPreferredSize().height +
+                turnInfo.getPreferredSize().height + button.getPreferredSize().height));
     }
 
 
@@ -101,10 +99,22 @@ public class Footer extends JPanel {
     public void updateTurnInfo(boolean myTurn) {
         if (myTurn) {
             turnInfo.setText(" TWOJA TURA!  ");
-            noMove.setEnabled(true);
+            button.setEnabled(true);
         } else {
             turnInfo.setText("              ");
-            noMove.setEnabled(false);
+            button.setEnabled(false);
         }
+    }
+
+    public void setReplayMode() {
+        info.setVisible(false);
+        playerInfo.setVisible(false);
+        turnInfo.setVisible(false);
+        button.setText("Następny ruch");
+        button.setEnabled(true);
+    }
+
+    public void setObserver(ButtonObserver observer) {
+        this.observer = observer;
     }
 }

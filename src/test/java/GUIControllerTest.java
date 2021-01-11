@@ -1,7 +1,6 @@
-import Client.GUI.BoardField;
 import Client.GUI.GameWindow;
 import Client.GUIController;
-import Client.GameController;
+import Client.IController;
 import Client.GUI.*;
 import Game.CounterColor;
 import org.junit.Before;
@@ -15,7 +14,7 @@ import static org.mockito.Mockito.*;
 public class GUIControllerTest {
 
     @Mock
-    public GameController gameController;
+    public IController IController;
     @Mock
     public GameWindow window;
     @Mock
@@ -25,16 +24,16 @@ public class GUIControllerTest {
     @Before
     public void init() {
         window = mock(GameWindow.class);
-        gameController = mock(GameController.class);
+        IController = mock(IController.class);
         board = mock(Board.class);
 
-        when(gameController.getColor()).thenReturn(CounterColor.BLUE);
+        when(IController.getColor()).thenReturn(CounterColor.BLUE);
         when(board.getColorOfField(anyInt(), anyInt())).thenReturn(CounterColor.BLUE.getJavaColor());
     }
 
     @Test
     public void clickTest() {
-        GUIController controller = new GUIController(gameController);
+        GUIController controller = new GUIController(IController);
         controller.setWindow(window);
         controller.setBoardParameters(1, 2, 3);
         controller.attach(board);
@@ -47,7 +46,7 @@ public class GUIControllerTest {
 
     @Test
     public void updateInfoTest() {
-        GUIController controller = new GUIController(gameController);
+        GUIController controller = new GUIController(IController);
         controller.setWindow(window);
 
         controller.updateTurnInfo(true);
@@ -61,7 +60,7 @@ public class GUIControllerTest {
 
     @Test
     public void miscTest() {
-        GUIController controller = new GUIController(gameController);
+        GUIController controller = new GUIController(IController);
         controller.setWindow(window);
         controller.close();
         controller.buttonClicked();

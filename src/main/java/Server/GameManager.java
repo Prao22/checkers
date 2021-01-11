@@ -3,6 +3,7 @@ package Server;
 import Communication.*;
 import Game.Game;
 import Game.GameParameters;
+import Server.Database.DatabaseService;
 import Utility.Log;
 
 /**
@@ -25,11 +26,19 @@ public class GameManager implements GameService {
      */
     private final Game game;
 
+    private int dbGameId;
 
-    public GameManager(Sender sender, GameParameters gameParameters, Game game) {
+    /**
+     * Zapisywanie ruchów do bazy.
+     */
+    private final DatabaseService databaseService;
+
+
+    public GameManager(Sender sender, GameParameters gameParameters, Game game, DatabaseService databaseService) {
         this.sender = sender;
         this.gameParameters = gameParameters;
         this.game = game;
+        this.databaseService = databaseService;
     }
 
     /**
@@ -86,6 +95,10 @@ public class GameManager implements GameService {
     @Override
     public void start() {
         game.init(gameParameters);
+
+        //tworzenie wpisu w bazie
+        dbGameId = databaseService.newGame(gameParameters);
+
         int whoseTurn = game.whoseTurn();
         sender.send(new YourTurn(), whoseTurn);
     }
@@ -118,6 +131,8 @@ public class GameManager implements GameService {
         if (game.makeMove(move.getMove(), playerId)) {
             sender.send(new Answer(true), playerId);
             sender.sendToAll(move);
+            //wysyłanie ruchu
+            databaseService.saveNextMove(move.getMove(), dbGameId);
         } else {
             sender.send(new Answer(false), playerId);
         }

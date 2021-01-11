@@ -1,6 +1,7 @@
 import Communication.*;
 import Game.Game;
 import Game.Move;
+import Server.Database.DatabaseService;
 import Server.GameManager;
 import Server.Sender;
 import Game.GameParameters;
@@ -16,7 +17,8 @@ public class GameManagerTest {
         Sender sender = mock(Sender.class);
         GameParameters parameters = new GameParameters();
         Game game = mock(Game.class);
-        GameManager manager = new GameManager(sender, parameters, game);
+        DatabaseService service = mock(DatabaseService.class);
+        GameManager manager = new GameManager(sender, parameters, game, service);
         manager.serviceMessage(new GameInformation("adsf"), 1);
     }
 
@@ -29,7 +31,8 @@ public class GameManagerTest {
         when(game.makeMove(any(Move.class), anyInt())).thenReturn(true);
         when(game.whoseTurn()).thenReturn(1);
         when(game.isWinner()).thenReturn(1);
-        GameManager manager = new GameManager(sender, parameters, game);
+        DatabaseService service = mock(DatabaseService.class);
+        GameManager manager = new GameManager(sender, parameters, game, service);
         manager.serviceMessage(new Communication.Move(new Move(new int[]{4, 4}, new int[]{5, 6})), 1);
     }
 
@@ -40,8 +43,8 @@ public class GameManagerTest {
         Sender sender = mock(Sender.class);
         GameParameters gameParameters = new GameParameters();
         gameParameters.setNumberFields(4);
-
-        GameManager manager = new GameManager(sender, gameParameters, new Game());
+        DatabaseService service = mock(DatabaseService.class);
+        GameManager manager = new GameManager(sender, gameParameters, new Game(), service);
         manager.addPlayer(1);
         manager.addPlayer(2);
         manager.start();
@@ -57,7 +60,8 @@ public class GameManagerTest {
         GameParameters gameParameters = new GameParameters();
         gameParameters.setNumberFields(4);
 
-        GameManager manager = new GameManager(sender, gameParameters, game);
+        DatabaseService service = mock(DatabaseService.class);
+        GameManager manager = new GameManager(sender, gameParameters, game, service);
         manager.addPlayer(1);
         manager.addPlayer(2);
 
@@ -75,7 +79,8 @@ public class GameManagerTest {
         GameParameters gameParameters = new GameParameters();
         gameParameters.setNumberFields(4);
 
-        GameManager manager = new GameManager(sender, gameParameters, game);
+        DatabaseService service = mock(DatabaseService.class);
+        GameManager manager = new GameManager(sender, gameParameters, game, service);
         manager.addPlayer(1);
         manager.addPlayer(2);
         manager.start();

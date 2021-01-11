@@ -11,4 +11,6 @@ public interface GUIService {
     void setBoardParameters(int size, int numberOfPlayers, int numberOfCounters);
     void resetClicks();
     void repack();
+    void prepareForReplay();
+    void setController(IController controller);
 }

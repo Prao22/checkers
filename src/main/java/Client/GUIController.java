@@ -9,13 +9,14 @@ public class GUIController implements GUIService, GUIObserver {
 
     private GameWindow mainWindow;
     private Board observedBoard;
-    private GameController gameController;
+    private IController controller;
 
     private int[] firstClick;
     private boolean secondClick = false;
+    private boolean replayMode = false;
 
-    public GUIController(GameController gameController) {
-        this.gameController = gameController;
+    public GUIController(IController controller) {
+        this.controller = controller;
     }
 
     public void setWindow(GameWindow mainWindow) {
@@ -79,16 +80,23 @@ public class GUIController implements GUIService, GUIObserver {
     }
 
     @Override
+    public void prepareForReplay() {
+
+        replayMode = true;
+        mainWindow.setReplayMode();
+    }
+
+    @Override
     public void clickNotify(int row, int col) {
 
-        if (observedBoard.getColorOfField(row, col) == null || gameController.getColor() == null ||
-                (!observedBoard.getColorOfField(row, col).equals(gameController.getColor().getJavaColor()) && !secondClick)) {
+        if (replayMode || observedBoard.getColorOfField(row, col) == null || controller.getColor() == null ||
+                (!observedBoard.getColorOfField(row, col).equals(controller.getColor().getJavaColor()) && !secondClick)) {
             return;
         }
 
 
         if (secondClick) {
-            gameController.setMove(new Game.Move(firstClick, new int[]{row, col}));
+            controller.setMove(new Game.Move(firstClick, new int[]{row, col}));
             resetClicks();
         } else {
             firstClick = new int[]{row, col};
@@ -104,11 +112,19 @@ public class GUIController implements GUIService, GUIObserver {
 
     @Override
     public void close() {
-        gameController.close();
+        controller.close();
     }
 
     @Override
     public void buttonClicked() {
-        gameController.setMove(null);
+        if(!replayMode) {
+            controller.setMove(null);
+        } else {
+            controller.nextMove();
+        }
+    }
+
+    public void setController(IController controller) {
+        this.controller = controller;
     }
 }

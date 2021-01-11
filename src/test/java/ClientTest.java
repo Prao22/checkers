@@ -13,23 +13,23 @@ public class ClientTest {
         assert !client.isConnected();
         client.send(new Information("abc"));
         client.disconnect();
-        client.setGameService(null);
+        client.setMessageController(null);
     }
 
     @Test
     public void connectionTest() {
         ServerHandler serverHandler = mock(ServerHandler.class);
-        GameService gameService = mock(GameService.class);
+        MessageController gameService = mock(MessageController.class);
 
         when(serverHandler.isAnyMessage()).thenReturn(false, true, true, true, true, true, true, false);
         when(serverHandler.getNextMessage()).thenReturn(new Information("asd"), new Start(1), new YourTurn(),
-                new Move(null), new Answer(true), new Disconnection(2), (Information) null);
+                new Move(null), new Answer(true), new Disconnection(2), null);
         when(serverHandler.isConnected()).thenReturn(true);
         when(serverHandler.isEnd()).thenReturn(false);
 
         Client client = new Client();
         client.setHandler(serverHandler);
-        client.setGameService(gameService);
+        client.setMessageController(gameService);
         client.send(new Information("dsf"));
         assert client.getLock() != null;
         assert client.isConnected();
