@@ -1,6 +1,7 @@
 package Server;
 
 import Communication.GameMessage;
+import Game.GameParameters;
 
 /**
  * Interfejs który obsługuje wiadomości dotyczące gry.
@@ -30,5 +31,5 @@ public interface GameService {
     /**
      * Inicjalizuje gre.
      */
-    void start();
+    void start(GameParameters parameters);
 }

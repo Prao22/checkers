@@ -2,7 +2,7 @@ package Server.ConsoleUI;
 
 import java.util.Scanner;
 
-public abstract class ConsoleUI {
+public abstract class ConsoleUI extends Thread {
     protected Scanner scanner = SingletonScanner.getInstance();
 
     protected void printInBorder(String string) {

@@ -2,16 +2,16 @@ package Server.ConsoleUI;
 
 import Server.Server;
 
-public class ServerConsoleUI extends ConsoleUI implements Runnable {
+public class ServerConsoleUI extends ConsoleUI {
 
     private final Server watchedServer;
     private final ServerSettingsUI settingsUI;
     private final Object serverLock;
 
-    public ServerConsoleUI(Server server, Object lock) {
+    public ServerConsoleUI(Server server) {
         watchedServer = server;
         settingsUI = new ServerSettingsUI(server, watchedServer.getGameParameters());
-        serverLock = lock;
+        serverLock = server.getLock();
     }
 
     @Override

@@ -15,6 +15,9 @@ public class GUIController implements GUIService, GUIObserver {
     private boolean secondClick = false;
     private boolean replayMode = false;
 
+    public GUIController(){
+
+    }
     public GUIController(IController controller) {
         this.controller = controller;
     }

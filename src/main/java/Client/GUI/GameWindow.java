@@ -43,8 +43,24 @@ public class GameWindow extends JFrame implements WindowListener {
     public GameWindow(GUIObserver observer) {
         setTitle(GAME_NAME);
         title = new TitleLabel(GAME_NAME);
-        footer = new Footer(observer);
+        footer = new Footer();
+        footer.setObserver(observer);
         this.observer = observer;
+
+        this.getContentPane().setLayout(new BorderLayout());
+        this.getContentPane().add(title, BorderLayout.NORTH);
+        this.getContentPane().add(footer, BorderLayout.SOUTH);
+
+        setResizable(true);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        pack();
+    }
+
+    public GameWindow() {
+        setTitle(GAME_NAME);
+        title = new TitleLabel(GAME_NAME);
+        footer = new Footer();
 
         this.getContentPane().setLayout(new BorderLayout());
         this.getContentPane().add(title, BorderLayout.NORTH);

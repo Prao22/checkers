@@ -14,7 +14,7 @@ public class Client implements Sender {
 
     private ServerHandler handler;
     private boolean connected = false;
-    private final Object lock = new Object();
+    private Object lock;
     private MessageController messageController;
 
     public Client() {
@@ -25,6 +25,7 @@ public class Client implements Sender {
      * Czeka na wiadomości i przekazuje je do odpowiednich funkcji.
      */
     public void mainLoop() {
+        prepareHandler();
 
         while (connected) {
             waitForEvent();
@@ -168,12 +169,16 @@ public class Client implements Sender {
 
     public void setHandler(ServerHandler handler) {
         this.handler = handler;
+        this.lock = handler.getLock();
+    }
 
+    private void prepareHandler() {
         if (handler.isConnected()) {
             this.handler.start();
             Log.log("Klient zostal polaczony ze serwerem");
             connected = true;
         } else {
+            Log.log("Handler nie polaczony");
             connected = false;
         }
     }

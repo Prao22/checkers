@@ -12,6 +12,8 @@ import java.net.ServerSocket;
 import java.util.*;
 
 import Game.Game;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  * Klasa serwera komunikującego się z graczami.
@@ -85,11 +87,13 @@ public class Server implements Sender {
     }
 
     public static void main(String[] args) {
-        Server server = new Server();
 
-        ServerConsoleUI ui = new ServerConsoleUI(server, server.getLock());
-        Thread uiThread = new Thread(ui);
-        uiThread.start();
+        ApplicationContext context = new ClassPathXmlApplicationContext("spring_server.xml");
+        //Server server = new Server();
+
+        Server server = (Server) context.getBean("serverMainClass");
+        ServerConsoleUI ui = (ServerConsoleUI) context.getBean("serverUI");
+        ui.start();
 
         server.run();
         server.turnOff();
@@ -144,7 +148,7 @@ public class Server implements Sender {
     }
 
     private void gameRun() {
-        setGameService(new GameManager(this, getGameParameters(), new Game(), DatabaseConnector.getInstance()));
+        //setGameService(new GameManager(this, new Game(), DatabaseConnector.getInstance()));
 
         try {
             waitForPlayers();
@@ -157,7 +161,7 @@ public class Server implements Sender {
             c.sendMessage(new Start(c.getClientId()));
         }
 
-        gameService.start();
+        gameService.start(gameParameters);
 
         mainLoop();
     }
@@ -172,7 +176,7 @@ public class Server implements Sender {
         }
 
         send(new ReplayMode(), 1);
-        setReplayService(new ReplayManager(this, DatabaseConnector.getInstance()));
+        //setReplayService(new ReplayManager(this, DatabaseConnector.getInstance()));
         replayService.setClient(1);
 
         replayService.start();
@@ -273,7 +277,7 @@ public class Server implements Sender {
         clients.remove(clientId);
         onlineClients--;
 
-        if(gameService != null) {
+        if(isGame) {
             gameService.removePlayer(clientId);
         }
     }

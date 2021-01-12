@@ -2,6 +2,7 @@ package Client.GUI;
 
 import Client.ButtonObserver;
 import Game.CounterColor;
+import Utility.Log;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,8 +40,7 @@ public class Footer extends JPanel {
      */
     private ButtonObserver observer;
 
-    public Footer(ButtonObserver observer) {
-        this.observer = observer;
+    public Footer() {
         info = new JLabel();
         playerInfo = new JLabel();
         turnInfo = new JLabel();
@@ -66,7 +66,7 @@ public class Footer extends JPanel {
         add(turnInfo);
         add(button);
 
-        button.addActionListener(actionEvent -> observer.buttonClicked());
+        button.addActionListener(actionEvent -> notifyAboutClick());
         updateTurnInfo(false);
         playerInfo.setText(" Twój id: " + "-" + " | Twój kolor: " + " - " + " | ");
 
@@ -115,6 +115,13 @@ public class Footer extends JPanel {
     }
 
     public void setObserver(ButtonObserver observer) {
+        //Log.log("ustawka" + observer);
         this.observer = observer;
+    }
+
+
+    private void notifyAboutClick() {
+        //Log.log("obs: " + observer);
+        observer.buttonClicked();
     }
 }

@@ -4,6 +4,9 @@ import Client.*;
 import Client.GUI.GameWindow;
 import Connection.ConnectionService;
 import Connection.IConnectionService;
+import Utility.Log;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -104,30 +107,38 @@ public class InitWindow extends JDialog {
      */
     public static void main(String[] args) {
 
-        //ApplicationContext context = new ClassPathXmlApplicationContext("spring_client.xml");
+        ApplicationContext context = new ClassPathXmlApplicationContext("spring_client.xml");
 
-        Client client = new Client();
-
-        IConnectionService connectionService = new ConnectionService();
-        InitWindow init = new InitWindow(new ServerConnector(connectionService));
+        InitWindow init = (InitWindow)context.getBean("initWindow");
         init.waitForInput();
 
-        ServerHandler serverHandler = new ServerHandler(connectionService, client.getLock());
-        client.setHandler(serverHandler);
+        //tutaj ile zaleznosci zaoszczedzono
+        /*
+        //IConnectionService connectionService = new ConnectionService();
+        ServerHandler serverHandler = new ServerHandler((IConnectionService)context.getBean("connectionService"));//connectionService);
 
-        if (!client.isConnected()) {
+        if (!serverHandler.isConnected()) {
             return;
         }
 
         GameController gameController = new GameController();
-        client.setMessageController(gameController);
-        gameController.setSender(client);
-
         GUIController guiController = new GUIController(gameController);
+        gameController.setGuiController(guiController);
+
         GameWindow window = new GameWindow(guiController);
         guiController.setWindow(window);
-        gameController.setGuiController(guiController);
+
+        Client client = new Client();
+
+        gameController.setSender(client);
+
+        client.setMessageController(gameController);
+        client.setHandler(serverHandler);
+        */
+
+        Client client = (Client)context.getBean("clientMainClass");
         client.mainLoop();
+
         System.exit(0);
     }
 

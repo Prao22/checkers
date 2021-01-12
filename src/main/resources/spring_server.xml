@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       https://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="dbService" class="Server.Database.DatabaseConnector" />
+
+    <bean id="defaultGameClass" class="Game.Game" />
+
+    <bean id="replayService" class="Server.ReplayManager" lazy-init="true">
+        <constructor-arg name="sender" ref="serverMainClass"/>
+        <constructor-arg name="databaseService" ref="dbService"/>
+    </bean>
+
+    <bean id="gameService" class="Server.GameManager" lazy-init="true">
+        <constructor-arg name="sender" ref="serverMainClass"/>
+        <constructor-arg name="game" ref="defaultGameClass"/>
+        <constructor-arg name="databaseService" ref="dbService"/>
+    </bean>
+
+    <bean id="serverMainClass" class="Server.Server">
+        <property name="replayService" ref="replayService"/>
+        <property name="gameService" ref="gameService"/>
+    </bean>
+
+    <bean id="serverUI" class="Server.ConsoleUI.ServerConsoleUI">
+        <constructor-arg ref="serverMainClass"/>
+    </bean>
+
+</beans>
+

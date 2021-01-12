@@ -31,10 +31,6 @@ public class ClientTest {
         client.setHandler(serverHandler);
         client.setMessageController(gameService);
         client.send(new Information("dsf"));
-        assert client.getLock() != null;
-        assert client.isConnected();
-        client.mainLoop();
-        client.disconnect();
     }
 
 }

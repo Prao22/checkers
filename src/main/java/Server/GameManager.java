@@ -17,11 +17,6 @@ public class GameManager implements GameService {
     private final Sender sender;
 
     /**
-     * Parametry aktualnej rozgrywki.
-     */
-    private final GameParameters gameParameters;
-
-    /**
      * Obsługa logicznej części gry.
      */
     private final Game game;
@@ -34,9 +29,8 @@ public class GameManager implements GameService {
     private final DatabaseService databaseService;
 
 
-    public GameManager(Sender sender, GameParameters gameParameters, Game game, DatabaseService databaseService) {
+    public GameManager(Sender sender, Game game, DatabaseService databaseService) {
         this.sender = sender;
-        this.gameParameters = gameParameters;
         this.game = game;
         this.databaseService = databaseService;
     }
@@ -93,11 +87,11 @@ public class GameManager implements GameService {
      * Inicjalizuje gre.
      */
     @Override
-    public void start() {
-        game.init(gameParameters);
+    public void start(GameParameters parameters) {
+        game.init(parameters);
 
         //tworzenie wpisu w bazie
-        dbGameId = databaseService.newGame(gameParameters);
+        dbGameId = databaseService.newGame(parameters);
 
         int whoseTurn = game.whoseTurn();
         sender.send(new YourTurn(), whoseTurn);

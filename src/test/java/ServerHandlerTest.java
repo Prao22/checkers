@@ -5,8 +5,6 @@ import Communication.Message;
 import Connection.ConnectionService;
 import Connection.IConnectionService;
 import org.junit.Test;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
 import static org.mockito.Mockito.*;
 
@@ -17,7 +15,7 @@ public class ServerHandlerTest {
         IConnectionService service = mock(ConnectionService.class);
         when(service.receiveObject()).thenReturn("abc");
 
-        ServerHandler serverHandler = new ServerHandler(service, new Object());
+        ServerHandler serverHandler = new ServerHandler(service);
         serverHandler.start();
         when(service.receiveObject()).thenReturn(null);
     }
@@ -27,7 +25,7 @@ public class ServerHandlerTest {
         IConnectionService service = mock(ConnectionService.class);
         when(service.receiveObject()).thenReturn(null);
 
-        ServerHandler serverHandler = new ServerHandler(service, new Object());
+        ServerHandler serverHandler = new ServerHandler(service);
         serverHandler.run();
 
         verify(service).closeConnection();
@@ -53,7 +51,7 @@ public class ServerHandlerTest {
             return message[receive[0]];
         });
 
-        ServerHandler handler = new ServerHandler(service, lock);
+        ServerHandler handler = new ServerHandler(service);
         handler.start();
 
         Thread.sleep(1000);
@@ -65,7 +63,7 @@ public class ServerHandlerTest {
     public void expectedDisconnect() {
         IConnectionService service = mock(IConnectionService.class);
 
-        ServerHandler serverHandler = new ServerHandler(service, new Object()); serverHandler.disconnect();
+        ServerHandler serverHandler = new ServerHandler(service); serverHandler.disconnect();
         verify(service).sendObject(any(End.class));
         verify(service).closeConnection();
     }

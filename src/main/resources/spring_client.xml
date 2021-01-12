@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       https://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+    <bean id="connectionService" class="Connection.ConnectionService"/>
+
+    <bean id="serverConnector" class="Client.InitConnection.ServerConnector">
+        <constructor-arg ref="connectionService"/>
+    </bean>
+
+    <bean id="initWindow" class="Client.InitConnection.InitWindow">
+        <constructor-arg ref="serverConnector"/>
+    </bean>
+
+    <bean id="serverHandler" class="Client.ServerHandler">
+        <constructor-arg ref="connectionService"/>
+    </bean>
+
+    <bean id="mainWindow" class="Client.GUI.GameWindow" >
+        <property name="observer" ref="defaultGUIController"/>
+    </bean>
+
+    <bean id="defaultGUIController" class="Client.GUIController" >
+        <property name="controller" ref="defaultController"/>
+        <property name="window" ref="mainWindow"/>
+    </bean>
+
+    <bean id="replayController" class="Client.ReplayController" >
+        <property name="guiController" ref="defaultGUIController"/>
+        <property name="sender" ref="clientMainClass"/>
+    </bean>
+
+    <bean id="defaultController" class="Client.GameController">
+        <property name="guiController" ref="defaultGUIController"/>
+        <property name="sender" ref="clientMainClass"/>
+    </bean>
+
+    <bean id="clientMainClass" class="Client.Client" lazy-init="true" >
+        <property name="handler" ref="serverHandler"/>
+        <property name="messageController" ref="defaultController"/>
+    </bean>
+
+</beans>
+

@@ -14,10 +14,10 @@ public class ServerHandler extends Handler {
     private final Queue<Message> receive;
     private final Object lock;
 
-    public ServerHandler(IConnectionService service, Object lock) {
+    public ServerHandler(IConnectionService service) {
         super(service);
         receive = new ConcurrentLinkedQueue<>();
-        this.lock = lock;
+        this.lock = new Object();
     }
 
     @Override
@@ -59,6 +59,10 @@ public class ServerHandler extends Handler {
 
     public Message getNextMessage() {
         return receive.poll();
+    }
+
+    public Object getLock() {
+        return lock;
     }
 
     public boolean isAnyMessage() {
