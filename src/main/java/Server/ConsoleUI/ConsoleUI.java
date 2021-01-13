@@ -15,7 +15,7 @@ public abstract class ConsoleUI extends Thread {
             System.out.print("*");
         }
 
-        System.out.println("");
+        System.out.println();
         System.out.print("\t");
 
         for (int i = 0; i < indentation; i++) {
@@ -28,14 +28,14 @@ public abstract class ConsoleUI extends Thread {
             System.out.print("-");
         }
 
-        System.out.println("");
+        System.out.println();
         System.out.print("\t");
 
         for (int i = 0; i < borderLength; i++) {
             System.out.print("*");
         }
 
-        System.out.println("");
+        System.out.println();
     }
 
     protected void printMenu(String[] elements) {

@@ -4,9 +4,13 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
        https://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="dbService" class="Server.Database.DatabaseConnector" />
+    <import resource="spring_db.xml"/>
 
-    <bean id="defaultGameClass" class="Game.Game" />
+    <bean id="dbService" class="Server.Database.DatabaseConnector" lazy-init="true">
+        <property name="sessionFactory" ref="hibernateSessionFactory"/>
+    </bean>
+
+    <bean id="defaultGameClass" class="Game.Game" lazy-init="true"/>
 
     <bean id="replayService" class="Server.ReplayManager" lazy-init="true">
         <constructor-arg name="sender" ref="serverMainClass"/>
@@ -19,12 +23,12 @@
         <constructor-arg name="databaseService" ref="dbService"/>
     </bean>
 
-    <bean id="serverMainClass" class="Server.Server">
+    <bean id="serverMainClass" class="Server.Server" lazy-init="true">
         <property name="replayService" ref="replayService"/>
         <property name="gameService" ref="gameService"/>
     </bean>
 
-    <bean id="serverUI" class="Server.ConsoleUI.ServerConsoleUI">
+    <bean id="serverUI" class="Server.ConsoleUI.ServerConsoleUI" lazy-init="true">
         <constructor-arg ref="serverMainClass"/>
     </bean>
 

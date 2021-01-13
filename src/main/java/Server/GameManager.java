@@ -92,6 +92,7 @@ public class GameManager implements GameService {
 
         //tworzenie wpisu w bazie
         dbGameId = databaseService.newGame(parameters);
+        Log.log("Mam id gry = " + dbGameId);
 
         int whoseTurn = game.whoseTurn();
         sender.send(new YourTurn(), whoseTurn);
@@ -126,7 +127,10 @@ public class GameManager implements GameService {
             sender.send(new Answer(true), playerId);
             sender.sendToAll(move);
             //wysyłanie ruchu
-            databaseService.saveNextMove(move.getMove(), dbGameId);
+            if (move.getMove() != null) {
+                Log.log("Chce zapisac ruch do " + dbGameId + "  " + move.getMove());
+                databaseService.saveNextMove(move.getMove(), dbGameId);
+            }
         } else {
             sender.send(new Answer(false), playerId);
         }

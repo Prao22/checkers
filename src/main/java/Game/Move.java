@@ -1,6 +1,7 @@
 package Game;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 public class Move implements Serializable {
 
@@ -21,5 +22,13 @@ public class Move implements Serializable {
 
     public int[] getTo() {
         return to;
+    }
+
+    @Override
+    public String toString() {
+        return "Move{" +
+                "from=" + Arrays.toString(from) +
+                ", to=" + Arrays.toString(to) +
+                '}';
     }
 }

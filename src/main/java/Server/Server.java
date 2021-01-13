@@ -4,14 +4,12 @@ import Communication.*;
 import Connection.ConnectionService;
 import Game.GameParameters;
 import Server.ConsoleUI.ServerConsoleUI;
-import Server.Database.DatabaseConnector;
 import Utility.Log;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.*;
 
-import Game.Game;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -89,7 +87,6 @@ public class Server implements Sender {
     public static void main(String[] args) {
 
         ApplicationContext context = new ClassPathXmlApplicationContext("spring_server.xml");
-        //Server server = new Server();
 
         Server server = (Server) context.getBean("serverMainClass");
         ServerConsoleUI ui = (ServerConsoleUI) context.getBean("serverUI");
@@ -167,6 +164,7 @@ public class Server implements Sender {
     }
 
     private void replayRun() {
+
         try {
             addClient();
             onlineClients++;

@@ -1,6 +1,7 @@
 package Server.Database;
 
 import Game.GameParameters;
+import Game.Move;
 
 import java.util.Map;
 
@@ -17,7 +18,7 @@ public interface DatabaseService {
      * @param move ruch który ma być zapisany.
      * @param gameId id gry której ruch dotyczy.
      */
-    void saveNextMove(Game.Move move, int gameId);
+    void saveNextMove(Move move, int gameId);
 
     /**
      * Pobiera parametry danej gry.
@@ -32,7 +33,7 @@ public interface DatabaseService {
      * @param whichMove nr ruchu który checmy pobrać.
      * @return ruch z danej gry lub null jeśli ruch o danych parametrach nie istnieje.
      */
-    Game.Move getMove(int gameId, int whichMove);
+    Move getMove(int gameId, int whichMove);
 
     /**
      * Zwraca wszystkie gry jakie przechowuje baza.

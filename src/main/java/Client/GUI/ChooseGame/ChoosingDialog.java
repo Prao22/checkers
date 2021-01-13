@@ -72,7 +72,7 @@ public class ChoosingDialog extends JDialog {
 
     private void buttonClicked() {
         //Log.log("Klik: " + table.getSelectedRow() + "  " + table.getValueAt(table.getSelectedRow(), 0));
-        selectedGame = table.getSelectedRow();
+        selectedGame = (Integer) table.getValueAt(table.getSelectedRow(), 0);
         this.dispose();
     }
 

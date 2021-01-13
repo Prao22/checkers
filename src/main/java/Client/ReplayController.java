@@ -76,8 +76,10 @@ public class ReplayController extends MessageController {
     }
 
     private void chooseGame() {
+        Log.log("" + availableGames.toString());
         ChoosingDialog dialog = new ChoosingDialog(availableGames);
         int gameId = dialog.getId();
+        Log.log("Wybralem " + gameId);
         sender.send(new ChosenGame(gameId));
     }
 }
